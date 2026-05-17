@@ -3,7 +3,16 @@
     "allow": [
       "Bash(git config *)",
       "Bash(git filter-branch -f --env-filter ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(rm /Users/mariomonir/Marios/yaraodeh.github.io/images/templatemo-about-artist.jpg /Users/mariomonir/Marios/yaraodeh.github.io/images/templatemo-amber-folio-*.jpg)",
+      "Bash(sed -i '' '388s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
+      "Bash(sed -i '' '416s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
+      "Bash(sed -i '' '569s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
+      "Bash(sed -i '' '642s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
+      "Bash(sed -i '' '742s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)"
+    ],
+    "additionalDirectories": [
+      "/Users/mariomonir/Marios/yaraodeh.github.io/images"
     ]
   }
 }
