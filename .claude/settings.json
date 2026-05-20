@@ -9,7 +9,13 @@
       "Bash(sed -i '' '416s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
       "Bash(sed -i '' '569s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
       "Bash(sed -i '' '642s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
-      "Bash(sed -i '' '742s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)"
+      "Bash(sed -i '' '742s/overflow-x: hidden/overflow-x: clip/' /Users/mariomonir/Marios/yaraodeh.github.io/templatemo-amber-folio.css)",
+      "Bash(brew list *)",
+      "Bash(python3 -c \"from PIL import Image; print\\('pillow ok'\\)\")",
+      "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
+      "Bash(sips --resampleWidth 1920 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg)",
+      "Bash(sips --resampleWidth 1000 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/images/about/profile-photo.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/images/about/profile-photo.jpg)",
+      "Bash(sips --resampleHeightWidthMax 1920 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg)"
     ],
     "additionalDirectories": [
       "/Users/mariomonir/Marios/yaraodeh.github.io/images"
