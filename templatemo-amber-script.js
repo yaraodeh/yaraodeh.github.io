@@ -10,7 +10,7 @@ class PhotoCoverflow {
   }
 
   init() {
-    this.updateCoverflow();
+    this.updateCoverFlow();
     this.bindEvents();
     setInterval(() => this.next(), this.autoPlaySpeed);
   }
@@ -29,7 +29,11 @@ class PhotoCoverflow {
 
     this.items.forEach((item, index) => {
       item.addEventListener("click", () => {
-        if (index !== this.currentIndex) this.goTo(index);
+        if (index === this.currentIndex) {
+          window.location.href = `project.html?project=${item.dataset.dir}`;
+        } else {
+          this.goTo(index);
+        }
       });
     });
 
@@ -69,11 +73,11 @@ class PhotoCoverflow {
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => this.updateCoverflow(), 100);
+      resizeTimer = setTimeout(() => this.updateCoverFlow(), 100);
     });
   }
 
-  updateCoverflow() {
+  updateCoverFlow() {
     const isMobile = window.innerWidth <= 768;
     const isSmallMobile = window.innerWidth <= 480;
     const viewportHeight = window.innerHeight;
@@ -132,21 +136,38 @@ class PhotoCoverflow {
   prev() {
     this.currentIndex =
       (this.currentIndex - 1 + this.totalItems) % this.totalItems;
-    this.updateCoverflow();
+    this.updateCoverFlow();
   }
   next() {
     this.currentIndex = (this.currentIndex + 1) % this.totalItems;
-    this.updateCoverflow();
+    this.updateCoverFlow();
   }
   goTo(index) {
     this.currentIndex = index;
-    this.updateCoverflow();
+    this.updateCoverFlow();
   }
 }
 
 function loadCover() {
   const heroBg = document.querySelector(".hero-bg");
-  if (heroBg) heroBg.style.backgroundImage = "url('cover/image.jpg')";
+  if (heroBg) heroBg.style.backgroundImage = "url('cover/1-image.jpg')";
+}
+
+async function loadAbout() {
+  const [titleRes, bodyRes] = await Promise.all([
+    fetch("about/title.txt"),
+    fetch("about/body.txt"),
+  ]);
+  if (!titleRes.ok || !bodyRes.ok) return;
+  const [title, body] = await Promise.all([titleRes.text(), bodyRes.text()]);
+
+  document.getElementById("aboutImage").src = "about/1-image.jpg";
+  document.getElementById("aboutTitle").textContent = title.trim();
+  document.getElementById("aboutBody").innerHTML = body
+    .trim()
+    .split(/\n\n+/)
+    .map((p) => `<p>${p.trim()}</p>`)
+    .join("");
 }
 
 async function loadPortfolio() {
@@ -178,8 +199,8 @@ async function loadPortfolio() {
   container.innerHTML = items
     .map(
       (item, i) => `
-      <div class="coverflow-item" data-index="${i}">
-         <img src="portfolio/${item.dir}/image.jpg" alt="${item.title}" class="portfolio-image">
+      <div class="coverflow-item" data-index="${i}" data-dir="${item.dir}">
+         <img src="portfolio/${item.dir}/1-image.jpg" alt="${item.title}" class="portfolio-image">
          <div class="portfolio-overlay"></div>
          <div class="portfolio-category">${item.title}</div>
       </div>`,
@@ -199,6 +220,7 @@ async function loadPortfolio() {
 // Initialize everything when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   loadCover();
+  loadAbout();
   loadPortfolio();
 
   // Header scroll effect

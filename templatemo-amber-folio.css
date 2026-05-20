@@ -479,6 +479,77 @@ nav {
 	background: var(--accent-color);
 }
 
+/* Project Page */
+.project-hero {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.project-hero img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.project-hero-overlay {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 50%, transparent 100%);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	padding: 60px;
+}
+
+.back-btn {
+	position: fixed;
+	top: 90px;
+	left: 30px;
+	z-index: 100;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: rgba(255, 255, 255, 0.7);
+	text-decoration: none;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: color 0.3s ease;
+}
+
+.back-btn:hover {
+	color: #ffffff;
+}
+
+.project-hero h1 {
+	font-size: clamp(2.5rem, 7vw, 6rem);
+	font-weight: 900;
+	letter-spacing: -2px;
+	color: #ffffff;
+	line-height: 1;
+}
+
+.project-body {
+	background: var(--primary-dark);
+	padding: 80px 30px;
+}
+
+.project-body-inner {
+	max-width: 760px;
+	margin: 0 auto;
+}
+
+.project-body p {
+	color: var(--text-gray);
+	font-size: 17px;
+	line-height: 1.9;
+	margin-bottom: 24px;
+}
+
 /* About Section */
 .about-section {
 	padding: 100px 30px;
