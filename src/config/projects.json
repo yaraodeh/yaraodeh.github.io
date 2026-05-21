@@ -1,0 +1,52 @@
+[
+  {
+    "dir": "portrait",
+    "title": "Portrait",
+    "body": "Intimate portrait sessions crafted to reveal character and personality in every frame."
+  },
+  {
+    "dir": "couples",
+    "title": "Couples",
+    "body": "Romantic couples sessions full of authentic emotion and beautifully composed storytelling."
+  },
+  {
+    "dir": "events",
+    "title": "Events",
+    "body": "Vibrant event photography that brings the energy and atmosphere of every occasion to life."
+  },
+  {
+    "dir": "conferences",
+    "title": "Conferences",
+    "body": "Polished corporate conference and seminar coverage for press, marketing, and lasting memory."
+  },
+  {
+    "dir": "jewellery",
+    "title": "Jewellery",
+    "body": "Macro jewellery photography with precise lighting that showcases every detail and sparkle."
+  },
+  {
+    "dir": "landscape",
+    "title": "Landscape",
+    "body": "Sweeping natural landscapes and travel photography available as fine art prints."
+  },
+  {
+    "dir": "nature",
+    "title": "Nature",
+    "body": "Close-up and wide-angle nature photography celebrating the quiet beauty of the natural world."
+  },
+  {
+    "dir": "modern-architecture",
+    "title": "Modern Architecture",
+    "body": "Clean lines, striking geometry, and the bold language of contemporary architecture."
+  },
+  {
+    "dir": "historic-architecture",
+    "title": "Historic Architecture",
+    "body": "Detailed architectural photography of historic buildings, monuments, and cultural heritage sites."
+  },
+  {
+    "dir": "art",
+    "title": "Art",
+    "body": "Fine art and conceptual photography that blurs the line between image-making and visual art."
+  }
+]

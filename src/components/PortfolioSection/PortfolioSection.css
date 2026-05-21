@@ -1,0 +1,29 @@
+.portfolio-section {
+  padding: 100px 0;
+  position: relative;
+  background: var(--primary-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: clip;
+}
+
+@media (max-width: 1024px) {
+  .portfolio-section {
+    padding: 70px 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-section {
+    padding: 60px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-section {
+    padding: 50px 15px;
+  }
+}

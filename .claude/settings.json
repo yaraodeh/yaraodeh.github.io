@@ -15,7 +15,8 @@
       "Bash(node -e \"require\\('sharp'\\); console.log\\('sharp ok'\\)\")",
       "Bash(sips --resampleWidth 1920 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg)",
       "Bash(sips --resampleWidth 1000 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/images/about/profile-photo.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/images/about/profile-photo.jpg)",
-      "Bash(sips --resampleHeightWidthMax 1920 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg)"
+      "Bash(sips --resampleHeightWidthMax 1920 -s format jpeg -s formatOptions 80 /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg --out /Users/mariomonir/Marios/yaraodeh.github.io/cover/image.jpg)",
+      "Bash(npm --version)"
     ],
     "additionalDirectories": [
       "/Users/mariomonir/Marios/yaraodeh.github.io/images"
