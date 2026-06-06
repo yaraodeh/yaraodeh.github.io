@@ -222,21 +222,34 @@
   margin-top: 0.35rem;
 }
 
-/* ── Results grid ── */
-.admin__results h2 {
+/* ── Gallery section ── */
+.admin__gallery h2 {
   font-size: 1.1rem;
   font-weight: 500;
-  margin: 0 0 1rem;
+  margin: 0 0 1.25rem;
   color: #ccc;
 }
 
+.admin__count {
+  color: #666;
+  font-weight: 400;
+}
+
+.admin__status {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* ── Image grid ── */
 .admin__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1rem;
 }
 
+/* ── Thumbnail card ── */
 .admin__thumb {
+  position: relative;
   background: #141414;
   border: 1px solid #1e1e1e;
   border-radius: 6px;
@@ -250,12 +263,68 @@
   display: block;
 }
 
-.admin__thumb p {
-  padding: 0.45rem 0.6rem;
-  font-size: 0.75rem;
-  color: #666;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0;
+/* ── Trash button ── */
+.admin__delete-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.admin__delete-btn svg {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.admin__delete-btn:hover {
+  background: rgba(180, 30, 30, 0.85);
+}
+
+.admin__delete-btn:disabled {
+  cursor: default;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Desktop (mouse/trackpad): hide trash, reveal on hover */
+@media (hover: hover) and (pointer: fine) {
+  .admin__delete-btn {
+    opacity: 0;
+  }
+  .admin__thumb:hover .admin__delete-btn {
+    opacity: 1;
+  }
+}
+
+/* Touch screens: always show trash */
+@media (hover: none), (pointer: coarse) {
+  .admin__delete-btn {
+    opacity: 1;
+  }
+}
+
+/* ── Spinner for deleting state ── */
+.admin__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
