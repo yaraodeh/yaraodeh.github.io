@@ -1,4 +1,4 @@
-import aboutImage from "/assets/1-image-C_kxRZ9O.jpg";
+import aboutImage from "@/assets/about/1-image.jpg";
 import { about, hero } from "@/config/site";
 import "@/components/AboutSection/AboutSection.css";
 
