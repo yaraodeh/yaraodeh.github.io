@@ -1,43 +1,21 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header/Header";
 import { projects } from "@/config/site";
 import "@/project.css";
 
-const CLOUD_NAME = "dggvgblqg";
-
 export default function Project() {
   const { dir } = useParams<{ dir: string }>();
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
-  const [cloudinaryImages, setCloudinaryImages] = useState<string[]>([]);
 
   const project = projects.find((p) => p.dir === dir);
-
-  const allImages = useMemo(
-    () => [...(project?.images ?? []), ...cloudinaryImages],
-    [project, cloudinaryImages]
-  );
+  const images = project?.images ?? [];
 
   useEffect(() => {
     if (!project) navigate("/");
   }, [project, navigate]);
 
-  useEffect(() => {
-    if (!dir) return;
-    fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${dir}.json`)
-      .then((r) => (r.ok ? r.json() : Promise.reject()))
-      .then((data) => {
-        const urls = (data.resources ?? []).map(
-          (r: { public_id: string; format: string }) =>
-            `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto/${r.public_id}.${r.format}`
-        );
-        setCloudinaryImages(urls);
-      })
-      .catch(() => {});
-  }, [dir]);
-
-  // Lock scroll on this page
   useEffect(() => {
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
@@ -49,24 +27,22 @@ export default function Project() {
 
   useEffect(() => {
     if (!project) return;
-    const total = allImages.length;
+    const total = images.length;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") setCurrent((c) => (c - 1 + total) % total);
       if (e.key === "ArrowRight") setCurrent((c) => (c + 1) % total);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [project, allImages.length]);
+  }, [project, images.length]);
 
   useEffect(() => {
     if (!project) return;
-    const total = allImages.length;
+    const total = images.length;
     let startX = 0;
     const el = document.getElementById("carousel");
     if (!el) return;
-    const onStart = (e: TouchEvent) => {
-      startX = e.touches[0].clientX;
-    };
+    const onStart = (e: TouchEvent) => { startX = e.touches[0].clientX; };
     const onEnd = (e: TouchEvent) => {
       const diff = startX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 40) setCurrent((c) => (c + (diff > 0 ? 1 : -1) + total) % total);
@@ -77,12 +53,12 @@ export default function Project() {
       el.removeEventListener("touchstart", onStart);
       el.removeEventListener("touchend", onEnd);
     };
-  }, [project, allImages.length]);
+  }, [project, images.length]);
 
   if (!project) return null;
 
   const { title, body } = project;
-  const total = allImages.length;
+  const total = images.length;
   const goTo = (i: number) => setCurrent((i + total) % total);
 
   const bodyHTML = body
@@ -96,7 +72,7 @@ export default function Project() {
 
       <div className="carousel" id="carousel">
         <div className="carousel-track" style={{ transform: `translateX(-${current * 100}%)` }}>
-          {allImages.map((src, i) => (
+          {images.map((src, i) => (
             <div key={i} className="carousel-slide">
               <img
                 src={src}
@@ -146,7 +122,7 @@ export default function Project() {
             </svg>
           </button>
           <div className="carousel-dots">
-            {allImages.map((_, i) => (
+            {images.map((_, i) => (
               <button
                 key={i}
                 className={`carousel-dot${i === current ? " active" : ""}`}

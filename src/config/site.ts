@@ -11,7 +11,7 @@ export interface PortfolioProject {
 }
 
 const imageModules = import.meta.glob<{ default: string }>(
-  "../assets/portfolio/**/*-image.{jpg,jpeg,JPG,JPEG}",
+  "../assets/portfolio/**/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,WEBP}",
   { eager: true }
 );
 
