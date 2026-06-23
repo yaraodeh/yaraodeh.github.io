@@ -17,7 +17,9 @@ export default function Header() {
 
   const handleNavClick = (section: string) => {
     setMenuOpen(false);
-    if (isHome) {
+    if (section === "cv") {
+      navigate("/cv");
+    } else if (isHome) {
       document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     } else {
       navigate("/", { state: { scrollTo: section } });
@@ -29,6 +31,7 @@ export default function Header() {
     { id: "portfolio", label: "Portfolio" },
     { id: "about", label: "About" },
     { id: "services", label: "Services" },
+    { id: "cv", label: "CV" },
     { id: "contact", label: "Contact" },
   ];
 
