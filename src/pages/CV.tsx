@@ -1,10 +1,13 @@
+import Header from "@/components/Header/Header";
 import "@/pages/CV.css";
 
 export default function CV() {
   return (
-    <div className="cv-container">
+    <>
+      <Header />
+      <div className="cv-container">
       <div className="cv-page">
-        <header className="cv-header">
+        <div className="cv-header">
           <div className="cv-name">Yara Odeh</div>
           <div className="cv-role">Photographer — Documentary, Portrait, Street &amp; Fine Art</div>
           <div className="cv-contact">
@@ -73,7 +76,7 @@ export default function CV() {
               Barcelona, Spain
             </span>
           </div>
-        </header>
+        </div>
 
         <p className="cv-statement">
           Photographer with 4+ years of freelance experience, based in Barcelona and working across
@@ -188,6 +191,7 @@ export default function CV() {
           </div>
         </section>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

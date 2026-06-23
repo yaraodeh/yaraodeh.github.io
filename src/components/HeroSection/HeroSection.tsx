@@ -32,7 +32,7 @@ export default function HeroSection() {
           <button className="cta-button" onClick={() => scrollTo("portfolio")}>
             View My Work
           </button>
-          <button className="cta-button cta-button-outline" onClick={() => navigate("/cv")}>
+          <button className="cta-button" onClick={() => navigate("/cv")}>
             CV
           </button>
         </div>
