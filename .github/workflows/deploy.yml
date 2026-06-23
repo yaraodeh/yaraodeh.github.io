@@ -36,14 +36,13 @@ jobs:
           VITE_GH_BRANCH: ${{ secrets.VITE_GH_BRANCH }}
           VITE_PORTFOLIO_BASE: ${{ secrets.VITE_PORTFOLIO_BASE }}
 
-      - name: Commit built files to main
+      - name: Deploy to gh-pages
         run: |
+          cd dist
+          touch .nojekyll
+          git init
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          rm -rf assets/
-          cp dist/index.html ./index.html
-          cp -r dist/assets ./assets
-          cp dist/.nojekyll ./.nojekyll
-          git add index.html assets/ .nojekyll
-          git diff --cached --quiet && echo "Nothing to deploy" || git commit -m "ci: deploy [skip ci]"
-          git push origin main
+          git add .
+          git commit -m "ci: deploy"
+          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}" HEAD:gh-pages
