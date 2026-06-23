@@ -5,13 +5,12 @@ import type { GHFile } from "@/lib/github";
 import "./Admin.css";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string;
+const GH_TOKEN = import.meta.env.VITE_GH_TOKEN as string;
 
 export default function Admin() {
   const [authed,        setAuthed]        = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
-  const [tokenInput,    setTokenInput]    = useState("");
   const [loginError,    setLoginError]    = useState("");
-  const [token,         setToken]         = useState("");
 
   const [category,      setCategory]      = useState(projectsData[0].dir);
   const [images,        setImages]        = useState<GHFile[]>([]);
@@ -25,11 +24,11 @@ export default function Admin() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadImages = useCallback(async (cat: string, tok: string) => {
+  const loadImages = useCallback(async (cat: string) => {
     setLoadingImages(true);
     setImages([]);
     try {
-      setImages(await fetchImages(cat, tok));
+      setImages(await fetchImages(cat, GH_TOKEN));
     } catch {
       setImages([]);
     }
@@ -37,15 +36,14 @@ export default function Admin() {
   }, []);
 
   useEffect(() => {
-    if (authed) loadImages(category, token);
-  }, [authed, category, token, loadImages]);
+    if (authed) loadImages(category);
+  }, [authed, category, loadImages]);
 
   const handleLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD && tokenInput.trim()) {
-      setToken(tokenInput.trim());
+    if (passwordInput === ADMIN_PASSWORD) {
       setAuthed(true);
     } else {
-      setLoginError(!tokenInput.trim() ? "GitHub token is required" : "Incorrect password");
+      setLoginError("Incorrect password");
       setPasswordInput("");
     }
   };
@@ -57,8 +55,8 @@ export default function Admin() {
     setUploading(true);
     setErrors([]);
     try {
-      await uploadImages(files, category, images, token, setUploadLabel);
-      await loadImages(category, token);
+      await uploadImages(files, category, images, GH_TOKEN, setUploadLabel);
+      await loadImages(category);
     } catch (err) {
       setErrors([(err as Error).message]);
     }
@@ -71,7 +69,7 @@ export default function Admin() {
     if (!window.confirm(`Delete "${img.name}" permanently?`)) return;
     setDeletingPath(img.path);
     try {
-      await deleteImage(img, category, token);
+      await deleteImage(img, category, GH_TOKEN);
       setImages(prev => prev.filter(i => i.path !== img.path));
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
@@ -87,7 +85,7 @@ export default function Admin() {
     }
     setDeletingPath(img.path);
     try {
-      const renamed = await renameImage(img, trimmed, category, token);
+      const renamed = await renameImage(img, trimmed, category, GH_TOKEN);
       setImages(prev =>
         prev
           .map(i => i.path === img.path ? renamed : i)
@@ -113,14 +111,6 @@ export default function Admin() {
             onKeyDown={e => e.key === "Enter" && handleLogin()}
             className={loginError ? "admin-login__input--error" : ""}
             autoFocus
-          />
-          <input
-            type="password"
-            placeholder="GitHub Token (fine-grained PAT)"
-            value={tokenInput}
-            onChange={e => { setTokenInput(e.target.value); setLoginError(""); }}
-            onKeyDown={e => e.key === "Enter" && handleLogin()}
-            className={loginError ? "admin-login__input--error" : ""}
           />
           {loginError && <p className="admin-login__error">{loginError}</p>}
           <button onClick={handleLogin}>Enter</button>
