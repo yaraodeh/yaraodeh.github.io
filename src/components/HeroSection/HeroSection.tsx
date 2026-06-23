@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import coverImage from "@/assets/cover/1-image.jpg";
 import { hero } from "@/config/site";
 import "@/components/HeroSection/HeroSection.css";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   const scrollTo = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
@@ -26,9 +28,14 @@ export default function HeroSection() {
             </a>
           ))}
         </div>
-        <button className="cta-button" onClick={() => scrollTo("portfolio")}>
-          View My Work
-        </button>
+        <div className="hero-cta-group">
+          <button className="cta-button" onClick={() => scrollTo("portfolio")}>
+            View My Work
+          </button>
+          <button className="cta-button cta-button-outline" onClick={() => navigate("/cv")}>
+            CV
+          </button>
+        </div>
       </div>
     </section>
   );

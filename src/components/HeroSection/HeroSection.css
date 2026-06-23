@@ -92,6 +92,13 @@
   padding: 0 15px;
 }
 
+.hero-cta-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .cta-button {
   display: inline-block;
   padding: 15px 40px;
@@ -111,6 +118,18 @@
 .cta-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
+}
+
+.cta-button-outline {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.cta-button-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {
