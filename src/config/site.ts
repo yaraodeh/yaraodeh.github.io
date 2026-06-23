@@ -1,7 +1,7 @@
 import siteData from "./site.json";
 import projectsData from "./projects.json";
 
-export const { hero, about, services } = siteData;
+export const { hero, about, services, portfolioBase } = siteData;
 
 export interface PortfolioProject {
   dir: string;
@@ -11,7 +11,7 @@ export interface PortfolioProject {
 }
 
 const imageModules = import.meta.glob<{ default: string }>(
-  "../assets/portfolio/**/*.{jpg,jpeg,JPG,JPEG,png,PNG,webp,WEBP}",
+  "../assets/portfolio/**/*-image.{jpg,jpeg,JPG,JPEG,png,PNG,webp,WEBP}",
   { eager: true }
 );
 

@@ -1,0 +1,312 @@
+{
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.claude/settings.json": {
+    "mtime": 1779296412.9805748,
+    "ast_hash": "5199cac3594dcbd01752fb0b2947c149",
+    "semantic_hash": "5199cac3594dcbd01752fb0b2947c149"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.claude/settings.local.json": {
+    "mtime": 1782203108.932314,
+    "ast_hash": "92bf58636150b8951e971c0d36472b80",
+    "semantic_hash": "92bf58636150b8951e971c0d36472b80"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/applypatch-msg": {
+    "mtime": 1779363544.041413,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/commit-msg": {
+    "mtime": 1779363544.0412238,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/h": {
+    "mtime": 1779363544.0407526,
+    "ast_hash": "15239a01c5554e56ff745570fb583a91",
+    "semantic_hash": "15239a01c5554e56ff745570fb583a91"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/husky.sh": {
+    "mtime": 1779363544.0423245,
+    "ast_hash": "13871d2ab13e8423790ecb2c01c78c18",
+    "semantic_hash": "13871d2ab13e8423790ecb2c01c78c18"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/post-applypatch": {
+    "mtime": 1779363544.0416033,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/post-checkout": {
+    "mtime": 1779363544.041916,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/post-commit": {
+    "mtime": 1779363544.0413203,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/post-merge": {
+    "mtime": 1779363544.042016,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/post-rewrite": {
+    "mtime": 1779363544.0418265,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-applypatch": {
+    "mtime": 1779363544.0415087,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-auto-gc": {
+    "mtime": 1779363544.0421913,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-commit": {
+    "mtime": 1779363544.0409276,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-merge-commit": {
+    "mtime": 1779363544.0410364,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-push": {
+    "mtime": 1779363544.0421054,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/pre-rebase": {
+    "mtime": 1779363544.0417025,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.husky/_/prepare-commit-msg": {
+    "mtime": 1779363544.0411305,
+    "ast_hash": "0b71c2e7d39daa010985d529f1320b37",
+    "semantic_hash": "0b71c2e7d39daa010985d529f1320b37"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/assets/index-BCYpWKUf.js": {
+    "mtime": 1782157944.9265912,
+    "ast_hash": "f704577723ec155869f891cfded06771",
+    "semantic_hash": "f704577723ec155869f891cfded06771"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/eslint.config.js": {
+    "mtime": 1779362321.5460293,
+    "ast_hash": "a6b000b6a001989a52dcbaccb3f3c688",
+    "semantic_hash": "a6b000b6a001989a52dcbaccb3f3c688"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/package.json": {
+    "mtime": 1779363778.1518865,
+    "ast_hash": "05162da7b1ced421931b4addf295880c",
+    "semantic_hash": "05162da7b1ced421931b4addf295880c"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/App.tsx": {
+    "mtime": 1782154089.4618826,
+    "ast_hash": "f07e97677b6289a7607c345571e42426",
+    "semantic_hash": "f07e97677b6289a7607c345571e42426"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/AboutSection/AboutSection.tsx": {
+    "mtime": 1779362601.3912065,
+    "ast_hash": "2b41e95ca824444245aeb8d5a1cf22cd",
+    "semantic_hash": "2b41e95ca824444245aeb8d5a1cf22cd"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/ContactSection/ContactSection.tsx": {
+    "mtime": 1779362440.0339434,
+    "ast_hash": "c6e5c315c2854f1797ea0f7868d9fb3b",
+    "semantic_hash": "c6e5c315c2854f1797ea0f7868d9fb3b"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/Coverflow/Coverflow.tsx": {
+    "mtime": 1779362748.2594256,
+    "ast_hash": "bd3c583e4a40866f152d5e2581f3d948",
+    "semantic_hash": "bd3c583e4a40866f152d5e2581f3d948"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/Footer/Footer.tsx": {
+    "mtime": 1779362433.6497798,
+    "ast_hash": "a533bc0661d92fe38c9c68fcd1d273ad",
+    "semantic_hash": "a533bc0661d92fe38c9c68fcd1d273ad"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/Header/Header.tsx": {
+    "mtime": 1779362432.6418805,
+    "ast_hash": "82d47836c83fcf9cbdfbab47253fe591",
+    "semantic_hash": "82d47836c83fcf9cbdfbab47253fe591"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/HeroSection/HeroSection.tsx": {
+    "mtime": 1779362588.5797343,
+    "ast_hash": "8b4cad73a995abdf58cc296da57ae426",
+    "semantic_hash": "8b4cad73a995abdf58cc296da57ae426"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/PortfolioSection/PortfolioSection.tsx": {
+    "mtime": 1779362746.8193264,
+    "ast_hash": "fd92246ddcd504c54924a1c6b85747c4",
+    "semantic_hash": "fd92246ddcd504c54924a1c6b85747c4"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/components/ServicesSection/ServicesSection.tsx": {
+    "mtime": 1779362596.2515042,
+    "ast_hash": "49a475382ebf432786c75d5e8ac8185a",
+    "semantic_hash": "49a475382ebf432786c75d5e8ac8185a"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/config/projects.json": {
+    "mtime": 1779363032.9950962,
+    "ast_hash": "ef556adbf1dc009b19cfdf5f398aa4d5",
+    "semantic_hash": "ef556adbf1dc009b19cfdf5f398aa4d5"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/config/site.json": {
+    "mtime": 1782203076.550928,
+    "ast_hash": "6babb236f988b3a43748eeac4bf19bff",
+    "semantic_hash": "6babb236f988b3a43748eeac4bf19bff"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/config/site.ts": {
+    "mtime": 1782203079.479375,
+    "ast_hash": "cc3dc620d09c392899f53d13e5998786",
+    "semantic_hash": "cc3dc620d09c392899f53d13e5998786"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/lib/fileUtils.ts": {
+    "mtime": 1782202052.4520483,
+    "ast_hash": "6353238e43ad74ab113acca8fffe2908",
+    "semantic_hash": "6353238e43ad74ab113acca8fffe2908"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/lib/github.ts": {
+    "mtime": 1782203085.2722929,
+    "ast_hash": "7556a3616dd61e5fb9737eaa9bd2f291",
+    "semantic_hash": "7556a3616dd61e5fb9737eaa9bd2f291"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/main.tsx": {
+    "mtime": 1779362427.3199039,
+    "ast_hash": "f4e989e04ddfa178b76afad4a59b517f",
+    "semantic_hash": "f4e989e04ddfa178b76afad4a59b517f"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/pages/Admin.tsx": {
+    "mtime": 1782202110.9987528,
+    "ast_hash": "d29fc0cf4296313109a51311c9deec24",
+    "semantic_hash": "d29fc0cf4296313109a51311c9deec24"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/pages/Home.tsx": {
+    "mtime": 1779362430.1187336,
+    "ast_hash": "2739557d7d2e8b6f1b1a0d4d13c8be7c",
+    "semantic_hash": "2739557d7d2e8b6f1b1a0d4d13c8be7c"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/pages/Project.tsx": {
+    "mtime": 1782157945.1597111,
+    "ast_hash": "79a1889f64dbadbd6247fe330dc57fa5",
+    "semantic_hash": "79a1889f64dbadbd6247fe330dc57fa5"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/test/App.test.tsx": {
+    "mtime": 1779362442.475988,
+    "ast_hash": "04f3b8e35ba11153be5c05e80b83dc94",
+    "semantic_hash": "04f3b8e35ba11153be5c05e80b83dc94"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/test/portfolio.test.ts": {
+    "mtime": 1779362750.3019328,
+    "ast_hash": "d61ab521e232e78b047d85a7f2970666",
+    "semantic_hash": "d61ab521e232e78b047d85a7f2970666"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/test/setup.ts": {
+    "mtime": 1779362283.030945,
+    "ast_hash": "3485b07bb161e1c2983e0db10649eb36",
+    "semantic_hash": "3485b07bb161e1c2983e0db10649eb36"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/vite-env.d.ts": {
+    "mtime": 1782203025.2320106,
+    "ast_hash": "34b370931e9031d6e4d956fad47c31b8",
+    "semantic_hash": "34b370931e9031d6e4d956fad47c31b8"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/tsconfig.app.json": {
+    "mtime": 1782154089.4830508,
+    "ast_hash": "e844236eef8a94a9a7e3c8552a203269",
+    "semantic_hash": "e844236eef8a94a9a7e3c8552a203269"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/tsconfig.json": {
+    "mtime": 1779296904.9570103,
+    "ast_hash": "a3d39fa780ebff65444de257f291ce6c",
+    "semantic_hash": "a3d39fa780ebff65444de257f291ce6c"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/tsconfig.node.json": {
+    "mtime": 1779297374.4381895,
+    "ast_hash": "0ac2711bda9ddff2a30923d00904eb92",
+    "semantic_hash": "0ac2711bda9ddff2a30923d00904eb92"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/vite.config.ts": {
+    "mtime": 1779362419.7566519,
+    "ast_hash": "900e853721adac85c8ac4b322430f030",
+    "semantic_hash": "900e853721adac85c8ac4b322430f030"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/vitest.config.ts": {
+    "mtime": 1779297368.7679703,
+    "ast_hash": "0c644f70018f49bcc81e298c94c34a4e",
+    "semantic_hash": "0c644f70018f49bcc81e298c94c34a4e"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/.github/workflows/deploy.yml": {
+    "mtime": 1782201745.5950503,
+    "ast_hash": "187913dd63e1d8012aec204e71702074",
+    "semantic_hash": "187913dd63e1d8012aec204e71702074"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/index.html": {
+    "mtime": 1782157944.927056,
+    "ast_hash": "da2ed82a7b97a2e5edd76f9c0d6e07d3",
+    "semantic_hash": "da2ed82a7b97a2e5edd76f9c0d6e07d3"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/about/1-image.jpg": {
+    "mtime": 1782154089.4765375,
+    "ast_hash": "4ce2a0d6c0565791498a5e9780142760",
+    "semantic_hash": "4ce2a0d6c0565791498a5e9780142760"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/cover/1-image.jpg": {
+    "mtime": 1779297173.456353,
+    "ast_hash": "56f894c6b6e95d26166e24d1fb0ff2ea",
+    "semantic_hash": "56f894c6b6e95d26166e24d1fb0ff2ea"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/art/1-image.jpg": {
+    "mtime": 1779297173.4365163,
+    "ast_hash": "708a7449523d20d62d29d8b547ad0e93",
+    "semantic_hash": "708a7449523d20d62d29d8b547ad0e93"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/conferences/1-image.jpg": {
+    "mtime": 1779297173.4507723,
+    "ast_hash": "7e438d3fafcfbdb2e05c0ac713ed83b8",
+    "semantic_hash": "7e438d3fafcfbdb2e05c0ac713ed83b8"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/couples/1-image.jpg": {
+    "mtime": 1779297173.434695,
+    "ast_hash": "9ce0c20d1e7d6e0ea01ca7b10c8f6de2",
+    "semantic_hash": "9ce0c20d1e7d6e0ea01ca7b10c8f6de2"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/events/1-image.jpg": {
+    "mtime": 1779297173.4524188,
+    "ast_hash": "8c0402f9f823626e43158252a0686225",
+    "semantic_hash": "8c0402f9f823626e43158252a0686225"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/historic-architecture/1-image.jpg": {
+    "mtime": 1779297173.438665,
+    "ast_hash": "5847df0a6230d0db0a777f8464d3325d",
+    "semantic_hash": "5847df0a6230d0db0a777f8464d3325d"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/jewellery/1-image.jpg": {
+    "mtime": 1779297173.4440436,
+    "ast_hash": "7647aef2a9d4dbdb279c0637d7d90c15",
+    "semantic_hash": "7647aef2a9d4dbdb279c0637d7d90c15"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/landscape/1-image.jpg": {
+    "mtime": 1779297173.44649,
+    "ast_hash": "845ed6855ff018af66d13b8efc1e922c",
+    "semantic_hash": "845ed6855ff018af66d13b8efc1e922c"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/modern-architecture/1-image.jpg": {
+    "mtime": 1779297173.4484355,
+    "ast_hash": "a5d89fd5486712058e17ad538af27fee",
+    "semantic_hash": "a5d89fd5486712058e17ad538af27fee"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/nature/1-image.jpg": {
+    "mtime": 1779297173.4423203,
+    "ast_hash": "eddd9835e446408aefbebd15b7f76902",
+    "semantic_hash": "eddd9835e446408aefbebd15b7f76902"
+  },
+  "/Users/mariomonir/Marios/yaraodeh.github.io/src/assets/portfolio/portrait/1-image.jpg": {
+    "mtime": 1779297173.4404793,
+    "ast_hash": "d152dc806fecac602a832dd015464a0a",
+    "semantic_hash": "d152dc806fecac602a832dd015464a0a"
+  }
+}

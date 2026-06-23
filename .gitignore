@@ -19,7 +19,9 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Env files
+# Env files — never commit real credentials
 .env
 .env.local
+.env.development
+.env.production
 .env.*.local
