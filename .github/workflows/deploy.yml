@@ -34,15 +34,17 @@ jobs:
           VITE_GH_OWNER: ${{ secrets.VITE_GH_OWNER }}
           VITE_GH_REPO: ${{ secrets.VITE_GH_REPO }}
           VITE_GH_BRANCH: ${{ secrets.VITE_GH_BRANCH }}
-          VITE_PORTFOLIO_BASE: ${{ secrets.VITE_PORTFOLIO_BASE }}
 
       - name: Deploy to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd dist
           touch .nojekyll
           git init
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
           git add .
           git commit -m "ci: deploy"
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}" HEAD:gh-pages
+          git push --force origin HEAD:gh-pages
