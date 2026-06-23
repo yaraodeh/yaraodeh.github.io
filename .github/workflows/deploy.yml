@@ -35,16 +35,14 @@ jobs:
           VITE_GH_REPO: ${{ secrets.VITE_GH_REPO }}
           VITE_GH_BRANCH: ${{ secrets.VITE_GH_BRANCH }}
 
-      - name: Deploy to gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to main
         run: |
-          cd dist
-          touch .nojekyll
-          git init -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
-          git add .
-          git commit -m "ci: deploy"
-          git push --force origin HEAD:gh-pages
+          rm -rf assets/
+          cp dist/index.html ./index.html
+          cp -r dist/assets ./assets
+          cp dist/.nojekyll ./.nojekyll
+          git add --force index.html assets/ .nojekyll
+          git diff --cached --quiet && echo "Nothing to deploy" || git commit -m "ci: deploy [skip ci]"
+          git push origin main
