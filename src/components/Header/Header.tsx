@@ -19,6 +19,8 @@ export default function Header() {
     setMenuOpen(false);
     if (section === "cv") {
       navigate("/cv");
+    } else if (section === "volunteering") {
+      navigate("/volunteering");
     } else if (isHome) {
       document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -32,6 +34,7 @@ export default function Header() {
     { id: "about", label: "About" },
     { id: "services", label: "Services" },
     { id: "cv", label: "CV" },
+    { id: "volunteering", label: "Volunteering" },
     { id: "contact", label: "Contact" },
   ];
 
