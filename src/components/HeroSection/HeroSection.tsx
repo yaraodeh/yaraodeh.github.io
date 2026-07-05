@@ -35,6 +35,9 @@ export default function HeroSection() {
           <button className="cta-button" onClick={() => navigate("/cv")}>
             CV
           </button>
+          <button className="cta-button" onClick={() => navigate("/volunteering")}>
+            Volunteering
+          </button>
         </div>
       </div>
     </section>
