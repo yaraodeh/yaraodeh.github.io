@@ -13,7 +13,7 @@ export default function App() {
         <Route path="/project/:dir" element={<Project />} />
         <Route path="/cv" element={<CV />} />
         <Route path="/volunteering" element={<Volunteering />} />
-        {import.meta.env.DEV && <Route path="/admin" element={<Admin />} />}
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </HashRouter>
   );
