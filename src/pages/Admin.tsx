@@ -234,20 +234,32 @@ export default function Admin() {
   if (!authed) {
     return (
       <div className="admin-login">
-        <div className="admin-login__box">
+        <form
+          className="admin-login__box"
+          onSubmit={e => { e.preventDefault(); handleLogin(); }}
+        >
           <h1>Admin</h1>
           <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            value="admin"
+            readOnly
+            hidden
+          />
+          <input
             type="password"
+            name="password"
+            autoComplete="current-password"
             placeholder="Password"
             value={passwordInput}
             onChange={e => { setPasswordInput(e.target.value); setLoginError(""); }}
-            onKeyDown={e => e.key === "Enter" && handleLogin()}
             className={loginError ? "admin-login__input--error" : ""}
             autoFocus
           />
           {loginError && <p className="admin-login__error">{loginError}</p>}
-          <button onClick={handleLogin}>Enter</button>
-        </div>
+          <button type="submit">Enter</button>
+        </form>
       </div>
     );
   }

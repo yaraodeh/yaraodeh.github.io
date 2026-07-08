@@ -34,7 +34,8 @@ async function createBlob(base64: string, token: string): Promise<string> {
 
 type TreeEntry = { path: string; mode: string; type: string; sha: string | null };
 
-const MAX_COMMIT_ATTEMPTS = 3;
+const MAX_COMMIT_ATTEMPTS = 6;
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function makeCommit(entries: TreeEntry[], message: string, token: string): Promise<void> {
   const h = headers(token);
@@ -76,7 +77,9 @@ async function makeCommit(entries: TreeEntry[], message: string, token: string):
       throw new Error("Failed to update branch ref");
     }
     // Someone else (e.g. the deploy workflow) committed to the branch in the
-    // meantime — re-read the new HEAD and retry the whole sequence on top of it.
+    // meantime — back off briefly, then re-read the new HEAD and retry the
+    // whole sequence on top of it.
+    await sleep(400 * attempt + Math.random() * 300);
   }
 }
 
