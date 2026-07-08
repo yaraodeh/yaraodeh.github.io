@@ -5,10 +5,9 @@
     "body": "Intimate portrait sessions crafted to reveal character and personality in every frame.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518948/yaraodeh-portfolio/portrait/1-image_hlvlep.jpg",
-        "publicId": "yaraodeh-portfolio/portrait/1-image_hlvlep"
+        "tags": []
       }
     ]
   },
@@ -18,10 +17,9 @@
     "body": "Romantic couples sessions full of authentic emotion and beautifully composed storytelling.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518950/yaraodeh-portfolio/couples/1-image_kcljjz.jpg",
-        "publicId": "yaraodeh-portfolio/couples/1-image_kcljjz"
+        "tags": []
       }
     ]
   },
@@ -31,10 +29,9 @@
     "body": "Vibrant event photography that brings the energy and atmosphere of every occasion to life.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518951/yaraodeh-portfolio/events/1-image_n2luff.jpg",
-        "publicId": "yaraodeh-portfolio/events/1-image_n2luff"
+        "tags": []
       }
     ]
   },
@@ -44,10 +41,9 @@
     "body": "Polished corporate conference and seminar coverage for press, marketing, and lasting memory.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518952/yaraodeh-portfolio/conferences/1-image_mhcyzx.jpg",
-        "publicId": "yaraodeh-portfolio/conferences/1-image_mhcyzx"
+        "tags": []
       }
     ]
   },
@@ -57,10 +53,9 @@
     "body": "Macro jewellery photography with precise lighting that showcases every detail and sparkle.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518953/yaraodeh-portfolio/jewellery/1-image_dja96q.jpg",
-        "publicId": "yaraodeh-portfolio/jewellery/1-image_dja96q"
+        "tags": []
       }
     ]
   },
@@ -70,10 +65,9 @@
     "body": "Sweeping natural landscapes and travel photography available as fine art prints.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518954/yaraodeh-portfolio/landscape/1-image_ap6xz7.jpg",
-        "publicId": "yaraodeh-portfolio/landscape/1-image_ap6xz7"
+        "tags": []
       }
     ]
   },
@@ -83,10 +77,9 @@
     "body": "Close-up and wide-angle nature photography celebrating the quiet beauty of the natural world.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518955/yaraodeh-portfolio/nature/1-image_tadcwr.jpg",
-        "publicId": "yaraodeh-portfolio/nature/1-image_tadcwr"
+        "tags": []
       }
     ]
   },
@@ -96,10 +89,9 @@
     "body": "Clean lines, striking geometry, and the bold language of contemporary architecture.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518956/yaraodeh-portfolio/modern-architecture/1-image_a0hbru.jpg",
-        "publicId": "yaraodeh-portfolio/modern-architecture/1-image_a0hbru"
+        "tags": []
       }
     ]
   },
@@ -109,10 +101,9 @@
     "body": "Detailed architectural photography of historic buildings, monuments, and cultural heritage sites.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518957/yaraodeh-portfolio/historic-architecture/1-image_hhvh0v.jpg",
-        "publicId": "yaraodeh-portfolio/historic-architecture/1-image_hhvh0v"
+        "tags": []
       }
     ]
   },
@@ -122,10 +113,9 @@
     "body": "Fine art and conceptual photography that blurs the line between image-making and visual art.",
     "images": [
       {
+        "file": "1-image.jpg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518958/yaraodeh-portfolio/art/1-image_hz57kv.jpg",
-        "publicId": "yaraodeh-portfolio/art/1-image_hz57kv"
+        "tags": []
       }
     ]
   },
@@ -135,52 +125,44 @@
     "body": "A project born from a simple question: what does it mean to be separated from a sea that should already be yours?\n\nThrough landscapes, absence, and memory, this work reflects on borders, belonging, and the right to look toward one's own coast.\n\nGrateful to share this exhibition as the final project of my Master in Photography and Design at ELISAVA.\n\nThank you to everyone who joined me and supported this journey.",
     "images": [
       {
+        "file": "7-image.jpeg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518959/yaraodeh-portfolio/this-sea-is-mine/8-image_chsvhz.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/8-image_chsvhz"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 2,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518960/yaraodeh-portfolio/this-sea-is-mine/3-image_lupvwp.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/3-image_lupvwp"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 3,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518960/yaraodeh-portfolio/this-sea-is-mine/1-image_bd4uim.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/1-image_bd4uim"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 4,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518961/yaraodeh-portfolio/this-sea-is-mine/2-image_ksqnqz.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/2-image_ksqnqz"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 5,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518962/yaraodeh-portfolio/this-sea-is-mine/4-image_rcneab.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/4-image_rcneab"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 6,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518962/yaraodeh-portfolio/this-sea-is-mine/5-image_grdcdy.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/5-image_grdcdy"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 7,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518963/yaraodeh-portfolio/this-sea-is-mine/6-image_hvqmur.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/6-image_hvqmur"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 8,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518964/yaraodeh-portfolio/this-sea-is-mine/7-image_jthjah.jpg",
-        "publicId": "yaraodeh-portfolio/this-sea-is-mine/7-image_jthjah"
+        "tags": []
       }
     ]
   },
@@ -190,82 +172,69 @@
     "body": "A visual exploration of presence — the quiet, felt weight of being somewhere, with someone, in a moment worth holding onto.",
     "images": [
       {
+        "file": "1-image.jpeg",
         "order": 1,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518965/yaraodeh-portfolio/presence/1-image_iry4ta.jpg",
-        "publicId": "yaraodeh-portfolio/presence/1-image_iry4ta"
+        "tags": []
       },
       {
+        "file": "2-image.jpeg",
         "order": 2,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518966/yaraodeh-portfolio/presence/2-image_haldsc.jpg",
-        "publicId": "yaraodeh-portfolio/presence/2-image_haldsc"
+        "tags": []
       },
       {
+        "file": "3-image.jpeg",
         "order": 3,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518966/yaraodeh-portfolio/presence/3-image_ayocun.jpg",
-        "publicId": "yaraodeh-portfolio/presence/3-image_ayocun"
+        "tags": []
       },
       {
+        "file": "4-image.jpeg",
         "order": 4,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518967/yaraodeh-portfolio/presence/4-image_d3mqku.jpg",
-        "publicId": "yaraodeh-portfolio/presence/4-image_d3mqku"
+        "tags": []
       },
       {
+        "file": "5-image.jpeg",
         "order": 5,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518968/yaraodeh-portfolio/presence/5-image_bmmq3u.jpg",
-        "publicId": "yaraodeh-portfolio/presence/5-image_bmmq3u"
+        "tags": []
       },
       {
+        "file": "6-image.jpeg",
         "order": 6,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518969/yaraodeh-portfolio/presence/6-image_u3tak2.jpg",
-        "publicId": "yaraodeh-portfolio/presence/6-image_u3tak2"
+        "tags": []
       },
       {
+        "file": "7-image.jpeg",
         "order": 7,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518970/yaraodeh-portfolio/presence/7-image_kqvk1h.jpg",
-        "publicId": "yaraodeh-portfolio/presence/7-image_kqvk1h"
+        "tags": []
       },
       {
+        "file": "8-image.jpeg",
         "order": 8,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518971/yaraodeh-portfolio/presence/8-image_drbufv.jpg",
-        "publicId": "yaraodeh-portfolio/presence/8-image_drbufv"
+        "tags": []
       },
       {
+        "file": "9-image.jpeg",
         "order": 9,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518972/yaraodeh-portfolio/presence/9-image_br5tde.jpg",
-        "publicId": "yaraodeh-portfolio/presence/9-image_br5tde"
+        "tags": []
       },
       {
+        "file": "10-image.jpeg",
         "order": 10,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518973/yaraodeh-portfolio/presence/10-image_ylcxaa.jpg",
-        "publicId": "yaraodeh-portfolio/presence/10-image_ylcxaa"
+        "tags": []
       },
       {
+        "file": "11-image.jpeg",
         "order": 11,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518974/yaraodeh-portfolio/presence/11-image_w9na5y.jpg",
-        "publicId": "yaraodeh-portfolio/presence/11-image_w9na5y"
+        "tags": []
       },
       {
+        "file": "12-image.jpeg",
         "order": 12,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518974/yaraodeh-portfolio/presence/12-image_tug4sj.jpg",
-        "publicId": "yaraodeh-portfolio/presence/12-image_tug4sj"
+        "tags": []
       },
       {
+        "file": "13-image.jpeg",
         "order": 13,
-        "tags": [],
-        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518975/yaraodeh-portfolio/presence/13-image_hgn8na.jpg",
-        "publicId": "yaraodeh-portfolio/presence/13-image_hgn8na"
+        "tags": []
       }
     ]
   }
