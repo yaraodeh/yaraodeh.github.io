@@ -197,10 +197,11 @@ export async function reorderImages(
   if (!project) throw new Error(`Unknown project "${dir}"`);
 
   const byKey = new Map(project.images.map(img => [imgKey(img), img]));
-  const reordered: ImageMeta[] = orderedKeys.map((key, i) => ({
-    ...byKey.get(key)!,
-    order: i + 1,
-  }));
+  const reordered: ImageMeta[] = orderedKeys.map((key, i) => {
+    const img = byKey.get(key);
+    if (!img) throw new Error("Image list is out of date — reload the page and try again");
+    return { ...img, order: i + 1 };
+  });
 
   const updatedProject: ProjectMeta = { ...project, images: reordered };
   const updated = existing.map(p => (p.dir === dir ? updatedProject : p));

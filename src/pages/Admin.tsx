@@ -99,7 +99,8 @@ export default function Admin() {
       setUploadLabel(`Uploading ${files.length} image${files.length > 1 ? "s" : ""}…`);
       const uploaded = await Promise.all(files.map(uploadToCloudinary));
       setUploadLabel("Saving to project…");
-      const updated = await addImages(category, uploaded, projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await addImages(category, uploaded, fresh, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors([(err as Error).message]);
@@ -113,7 +114,8 @@ export default function Admin() {
     if (!window.confirm(`Delete this image permanently?`)) return;
     setBusyKey(key);
     try {
-      const updated = await deleteImage(category, key, projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await deleteImage(category, key, fresh, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
@@ -130,7 +132,8 @@ export default function Admin() {
     const tags = tagsValue.split(",").map(t => t.trim()).filter(Boolean);
     setBusyKey(key);
     try {
-      const updated = await updateImageTags(category, key, tags, projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await updateImageTags(category, key, tags, fresh, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
@@ -160,7 +163,8 @@ export default function Admin() {
     setSavingOrder(true);
     setErrors([]);
     try {
-      const updated = await reorderImages(category, orderedImages.map(imgKey), projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await reorderImages(category, orderedImages.map(imgKey), fresh, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
@@ -192,7 +196,8 @@ export default function Admin() {
     }
     setCreating(true);
     try {
-      const updated = await createProject({ dir, title, body: newBody.trim() }, projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await createProject({ dir, title, body: newBody.trim() }, fresh, GH_TOKEN);
       setProjects(updated);
       setCategory(dir);
       setShowCreate(false);
@@ -207,8 +212,9 @@ export default function Admin() {
     setErrors([]);
     setSavingProject(true);
     try {
+      const fresh = await fetchProjectsMeta();
       const updated = await updateProject(
-        category, { title: editTitle.trim(), body: editBody.trim() }, projects, GH_TOKEN,
+        category, { title: editTitle.trim(), body: editBody.trim() }, fresh, GH_TOKEN,
       );
       setProjects(updated);
       setEditingProject(false);
@@ -226,7 +232,8 @@ export default function Admin() {
     setErrors([]);
     setDeletingProject(true);
     try {
-      const updated = await deleteProject(category, projects, GH_TOKEN);
+      const fresh = await fetchProjectsMeta();
+      const updated = await deleteProject(category, fresh, GH_TOKEN);
       setProjects(updated);
       setCategory(updated[0]?.dir ?? "");
     } catch (err) {
