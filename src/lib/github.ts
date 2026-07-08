@@ -1,13 +1,15 @@
-import { fileExt, readBase64 } from "./fileUtils";
+import { fileExt, readBase64, utf8ToBase64, base64ToUtf8 } from "./fileUtils";
 import { portfolioBase } from "../config/site";
 
 export interface GHFile { name: string; path: string; sha: string; }
+export interface ProjectMeta { dir: string; title: string; body: string; }
 
 const GH_OWNER  = import.meta.env.VITE_GH_OWNER   as string;
 const GH_REPO   = import.meta.env.VITE_GH_REPO    as string;
 const GH_BRANCH = import.meta.env.VITE_GH_BRANCH  as string;
 
 const BASE_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
+const PROJECTS_JSON_PATH = "src/config/projects.json";
 
 export const rawUrl = (path: string) =>
   `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${path}?t=${Date.now()}`;
@@ -32,39 +34,50 @@ async function createBlob(base64: string, token: string): Promise<string> {
 
 type TreeEntry = { path: string; mode: string; type: string; sha: string | null };
 
+const MAX_COMMIT_ATTEMPTS = 3;
+
 async function makeCommit(entries: TreeEntry[], message: string, token: string): Promise<void> {
   const h = headers(token);
 
-  const refRes = await fetch(`${BASE_URL}/git/ref/heads/${GH_BRANCH}`, { headers: h });
-  if (!refRes.ok) throw new Error("Failed to read branch ref");
-  const latestCommitSha = (await refRes.json()).object.sha as string;
+  for (let attempt = 1; attempt <= MAX_COMMIT_ATTEMPTS; attempt++) {
+    const refRes = await fetch(`${BASE_URL}/git/ref/heads/${GH_BRANCH}`, { headers: h });
+    if (!refRes.ok) throw new Error("Failed to read branch ref");
+    const latestCommitSha = (await refRes.json()).object.sha as string;
 
-  const commitRes = await fetch(`${BASE_URL}/git/commits/${latestCommitSha}`, { headers: h });
-  if (!commitRes.ok) throw new Error("Failed to read commit");
-  const treeSha = (await commitRes.json()).tree.sha as string;
+    const commitRes = await fetch(`${BASE_URL}/git/commits/${latestCommitSha}`, { headers: h });
+    if (!commitRes.ok) throw new Error("Failed to read commit");
+    const treeSha = (await commitRes.json()).tree.sha as string;
 
-  const treeRes = await fetch(`${BASE_URL}/git/trees`, {
-    method: "POST",
-    headers: h,
-    body: JSON.stringify({ base_tree: treeSha, tree: entries }),
-  });
-  if (!treeRes.ok) throw new Error("Failed to create tree");
-  const newTreeSha = (await treeRes.json()).sha as string;
+    const treeRes = await fetch(`${BASE_URL}/git/trees`, {
+      method: "POST",
+      headers: h,
+      body: JSON.stringify({ base_tree: treeSha, tree: entries }),
+    });
+    if (!treeRes.ok) throw new Error("Failed to create tree");
+    const newTreeSha = (await treeRes.json()).sha as string;
 
-  const newCommitRes = await fetch(`${BASE_URL}/git/commits`, {
-    method: "POST",
-    headers: h,
-    body: JSON.stringify({ message, tree: newTreeSha, parents: [latestCommitSha] }),
-  });
-  if (!newCommitRes.ok) throw new Error("Failed to create commit");
-  const newCommitSha = (await newCommitRes.json()).sha as string;
+    const newCommitRes = await fetch(`${BASE_URL}/git/commits`, {
+      method: "POST",
+      headers: h,
+      body: JSON.stringify({ message, tree: newTreeSha, parents: [latestCommitSha] }),
+    });
+    if (!newCommitRes.ok) throw new Error("Failed to create commit");
+    const newCommitSha = (await newCommitRes.json()).sha as string;
 
-  const updateRes = await fetch(`${BASE_URL}/git/refs/heads/${GH_BRANCH}`, {
-    method: "PATCH",
-    headers: h,
-    body: JSON.stringify({ sha: newCommitSha }),
-  });
-  if (!updateRes.ok) throw new Error("Failed to update branch ref");
+    const updateRes = await fetch(`${BASE_URL}/git/refs/heads/${GH_BRANCH}`, {
+      method: "PATCH",
+      headers: h,
+      body: JSON.stringify({ sha: newCommitSha }),
+    });
+    if (updateRes.ok) return;
+
+    const isConflict = updateRes.status === 422 || updateRes.status === 409;
+    if (!isConflict || attempt === MAX_COMMIT_ATTEMPTS) {
+      throw new Error("Failed to update branch ref");
+    }
+    // Someone else (e.g. the deploy workflow) committed to the branch in the
+    // meantime — re-read the new HEAD and retry the whole sequence on top of it.
+  }
 }
 
 export async function fetchImages(category: string, token: string): Promise<GHFile[]> {
@@ -143,4 +156,106 @@ export async function renameImage(
   );
 
   return { name: newName, path: newPath, sha: blobSha };
+}
+
+export async function reorderImages(
+  orderedImages: GHFile[],
+  category: string,
+  token: string,
+): Promise<GHFile[]> {
+  const targets = orderedImages.map((img, i) => ({
+    img,
+    newPath: `${portfolioBase}/${category}/${i + 1}-image.${fileExt(img.name)}`,
+  }));
+
+  const newPaths = new Set(targets.map(t => t.newPath));
+  const entries: TreeEntry[] = [];
+
+  for (const { img, newPath } of targets) {
+    if (img.path !== newPath) {
+      entries.push({ path: newPath, mode: "100644", type: "blob", sha: img.sha });
+    }
+  }
+  for (const { img, newPath } of targets) {
+    if (img.path !== newPath && !newPaths.has(img.path)) {
+      entries.push({ path: img.path, mode: "100644", type: "blob", sha: null });
+    }
+  }
+
+  if (entries.length === 0) return orderedImages;
+
+  await makeCommit(entries, `reorder: images in ${category}`, token);
+
+  return targets.map(({ img, newPath }) => ({
+    name: newPath.split("/").pop()!,
+    path: newPath,
+    sha: img.sha,
+  }));
+}
+
+export async function fetchProjectsMeta(token: string): Promise<ProjectMeta[]> {
+  const res = await fetch(
+    `${BASE_URL}/contents/${PROJECTS_JSON_PATH}?ref=${GH_BRANCH}`,
+    { headers: headers(token) },
+  );
+  if (!res.ok) throw new Error(`Failed to load projects.json (${res.status})`);
+  const data = await res.json() as { content: string };
+  return JSON.parse(base64ToUtf8(data.content)) as ProjectMeta[];
+}
+
+async function commitProjectsMeta(
+  projects: ProjectMeta[],
+  message: string,
+  token: string,
+  extraEntries: TreeEntry[] = [],
+): Promise<void> {
+  const json = JSON.stringify(projects, null, 2) + "\n";
+  const blobSha = await createBlob(utf8ToBase64(json), token);
+
+  await makeCommit(
+    [
+      { path: PROJECTS_JSON_PATH, mode: "100644", type: "blob", sha: blobSha },
+      ...extraEntries,
+    ],
+    message,
+    token,
+  );
+}
+
+export async function createProject(
+  project: ProjectMeta,
+  existing: ProjectMeta[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  if (existing.some(p => p.dir === project.dir)) {
+    throw new Error(`A project with dir "${project.dir}" already exists`);
+  }
+  const updated = [...existing, project];
+  await commitProjectsMeta(updated, `admin: add project "${project.title}"`, token);
+  return updated;
+}
+
+export async function updateProject(
+  dir: string,
+  patch: { title: string; body: string },
+  existing: ProjectMeta[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  const updated = existing.map(p => (p.dir === dir ? { ...p, ...patch } : p));
+  await commitProjectsMeta(updated, `admin: update project "${dir}"`, token);
+  return updated;
+}
+
+export async function deleteProject(
+  dir: string,
+  existing: ProjectMeta[],
+  images: GHFile[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  const updated = existing.filter(p => p.dir !== dir);
+  const imageDeletions: TreeEntry[] = images.map(img => ({
+    path: img.path, mode: "100644", type: "blob", sha: null,
+  }));
+  await commitProjectsMeta(updated, `admin: delete project "${dir}"`, token, imageDeletions);
+  return updated;
 }

@@ -103,20 +103,24 @@ export default function Project() {
         className="carousel"
         id="carousel"
         ref={carouselRef}
-        style={carouselHeight ? { height: carouselHeight } : undefined}
+        style={carouselHeight ? { height: carouselHeight } : { height: "40vh" }}
       >
-        <div className="carousel-track" style={{ transform: `translateX(-${current * 100}%)` }}>
-          {images.map((src, i) => (
-            <div key={i} className="carousel-slide">
-              <img
-                src={src}
-                alt={i === 0 ? title : `${title} — ${i + 1}`}
-                loading={i === 0 ? "eager" : "lazy"}
-                onLoad={(e) => handleImageLoad(i, e.currentTarget)}
-              />
-            </div>
-          ))}
-        </div>
+        {total === 0 ? (
+          <div className="carousel-empty">No images yet</div>
+        ) : (
+          <div className="carousel-track" style={{ transform: `translateX(-${current * 100}%)` }}>
+            {images.map((src, i) => (
+              <div key={i} className="carousel-slide">
+                <img
+                  src={src}
+                  alt={i === 0 ? title : `${title} — ${i + 1}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  onLoad={(e) => handleImageLoad(i, e.currentTarget)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="carousel-overlay" />
 

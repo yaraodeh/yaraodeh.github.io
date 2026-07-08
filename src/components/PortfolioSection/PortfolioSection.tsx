@@ -12,7 +12,7 @@ export default function PortfolioSection() {
         </p>
       </div>
       <div className="coverflow-wrapper">
-        <Coverflow projects={projects} />
+        <Coverflow projects={projects.filter(p => p.images.length > 0)} />
       </div>
     </section>
   );

@@ -1,18 +1,28 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import projectsData from "@/config/projects.json";
-import { fetchImages, uploadImages, deleteImage, renameImage, rawUrl } from "@/lib/github";
-import type { GHFile } from "@/lib/github";
+import {
+  fetchImages, uploadImages, deleteImage, renameImage, reorderImages,
+  fetchProjectsMeta, createProject, updateProject, deleteProject, rawUrl,
+} from "@/lib/github";
+import type { GHFile, ProjectMeta } from "@/lib/github";
 import "./Admin.css";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string;
 const GH_TOKEN = import.meta.env.VITE_GH_TOKEN as string;
+
+const slugify = (s: string) =>
+  s.toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 export default function Admin() {
   const [authed,        setAuthed]        = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [loginError,    setLoginError]    = useState("");
 
-  const [category,      setCategory]      = useState(projectsData[0].dir);
+  const [projects,        setProjects]        = useState<ProjectMeta[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [category,        setCategory]        = useState("");
+
   const [images,        setImages]        = useState<GHFile[]>([]);
   const [loadingImages, setLoadingImages] = useState(false);
   const [uploading,     setUploading]     = useState(false);
@@ -22,11 +32,46 @@ export default function Admin() {
   const [renamingPath,  setRenamingPath]  = useState<string | null>(null);
   const [renameValue,   setRenameValue]   = useState("");
 
+  const [dragIndex,   setDragIndex]   = useState<number | null>(null);
+  const [orderDirty,  setOrderDirty]  = useState(false);
+  const [savingOrder, setSavingOrder] = useState(false);
+
+  const [showCreate, setShowCreate] = useState(false);
+  const [newTitle,   setNewTitle]   = useState("");
+  const [newDir,     setNewDir]     = useState("");
+  const [dirEdited,  setDirEdited]  = useState(false);
+  const [newBody,    setNewBody]    = useState("");
+  const [creating,   setCreating]   = useState(false);
+
+  const [editingProject, setEditingProject] = useState(false);
+  const [editTitle,      setEditTitle]      = useState("");
+  const [editBody,       setEditBody]       = useState("");
+  const [savingProject,  setSavingProject]  = useState(false);
+  const [deletingProject, setDeletingProject] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const loadProjects = useCallback(async () => {
+    setLoadingProjects(true);
+    setErrors([]);
+    try {
+      const list = await fetchProjectsMeta(GH_TOKEN);
+      setProjects(list);
+      setCategory(prev => (prev && list.some(p => p.dir === prev)) ? prev : (list[0]?.dir ?? ""));
+    } catch (err) {
+      setErrors([(err as Error).message]);
+    }
+    setLoadingProjects(false);
+  }, []);
+
+  useEffect(() => { if (authed) loadProjects(); }, [authed, loadProjects]);
+
+  const currentProject = projects.find(p => p.dir === category);
 
   const loadImages = useCallback(async (cat: string) => {
     setLoadingImages(true);
     setImages([]);
+    setOrderDirty(false);
     try {
       setImages(await fetchImages(cat, GH_TOKEN));
     } catch {
@@ -36,8 +81,13 @@ export default function Admin() {
   }, []);
 
   useEffect(() => {
-    if (authed) loadImages(category);
+    if (authed && category) loadImages(category);
   }, [authed, category, loadImages]);
+
+  useEffect(() => {
+    setEditingProject(false);
+    setShowCreate(false);
+  }, [category]);
 
   const handleLogin = () => {
     if (passwordInput === ADMIN_PASSWORD) {
@@ -98,6 +148,100 @@ export default function Admin() {
     setRenamingPath(null);
   };
 
+  const handleDragStart = (i: number) => setDragIndex(i);
+
+  const handleDragOver = (e: React.DragEvent, i: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === i) return;
+    setImages(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(dragIndex, 1);
+      next.splice(i, 0, moved);
+      return next;
+    });
+    setDragIndex(i);
+    setOrderDirty(true);
+  };
+
+  const handleDragEnd = () => setDragIndex(null);
+
+  const handleSaveOrder = async () => {
+    setSavingOrder(true);
+    setErrors([]);
+    try {
+      const updated = await reorderImages(images, category, GH_TOKEN);
+      setImages(updated);
+      setOrderDirty(false);
+    } catch (err) {
+      setErrors(prev => [...prev, (err as Error).message]);
+    }
+    setSavingOrder(false);
+  };
+
+  const handleResetOrder = () => loadImages(category);
+
+  const handleTitleChange = (v: string) => {
+    setNewTitle(v);
+    if (!dirEdited) setNewDir(slugify(v));
+  };
+
+  const handleCreate = async () => {
+    const dir = newDir.trim();
+    const title = newTitle.trim();
+    setErrors([]);
+    if (!dir || !title) {
+      setErrors(["Title and directory are required"]);
+      return;
+    }
+    if (!/^[a-z0-9-]+$/.test(dir)) {
+      setErrors(["Directory must be lowercase letters, numbers, and hyphens only"]);
+      return;
+    }
+    setCreating(true);
+    try {
+      const updated = await createProject({ dir, title, body: newBody.trim() }, projects, GH_TOKEN);
+      setProjects(updated);
+      setCategory(dir);
+      setShowCreate(false);
+      setNewTitle(""); setNewDir(""); setNewBody(""); setDirEdited(false);
+    } catch (err) {
+      setErrors([(err as Error).message]);
+    }
+    setCreating(false);
+  };
+
+  const handleSaveProject = async () => {
+    setErrors([]);
+    setSavingProject(true);
+    try {
+      const updated = await updateProject(
+        category, { title: editTitle.trim(), body: editBody.trim() }, projects, GH_TOKEN,
+      );
+      setProjects(updated);
+      setEditingProject(false);
+    } catch (err) {
+      setErrors([(err as Error).message]);
+    }
+    setSavingProject(false);
+  };
+
+  const handleDeleteProject = async () => {
+    if (!currentProject) return;
+    if (!window.confirm(
+      `Delete project "${currentProject.title}" and all ${images.length} image(s)? This cannot be undone.`
+    )) return;
+    setErrors([]);
+    setDeletingProject(true);
+    try {
+      const updated = await deleteProject(category, projects, images, GH_TOKEN);
+      setProjects(updated);
+      setCategory(updated[0]?.dir ?? "");
+    } catch (err) {
+      setErrors([(err as Error).message]);
+    }
+    setDeletingProject(false);
+  };
+
   if (!authed) {
     return (
       <div className="admin-login">
@@ -119,36 +263,128 @@ export default function Admin() {
     );
   }
 
-  const categoryTitle = projectsData.find(p => p.dir === category)?.title ?? category;
-
   return (
     <div className="admin">
       <div className="admin__header">
         <h1>Admin Panel</h1>
         <p>
-          Images are committed directly to the repo. The site rebuilds automatically
-          — new images appear publicly in ~1–2 min after upload.
+          Changes are committed directly to the repo. The site rebuilds automatically
+          — updates appear publicly in ~1–2 min.
         </p>
       </div>
 
       <div className="admin__form">
         <div className="admin__field">
-          <label htmlFor="cat">Category</label>
-          <select
-            id="cat"
-            value={category}
-            onChange={e => { setCategory(e.target.value); setErrors([]); }}
-          >
-            {projectsData.map(p => <option key={p.dir} value={p.dir}>{p.title}</option>)}
-          </select>
+          <label htmlFor="cat">Project</label>
+          <div className="admin__project-row">
+            <select
+              id="cat"
+              value={category}
+              disabled={loadingProjects || projects.length === 0}
+              onChange={e => { setCategory(e.target.value); setErrors([]); }}
+            >
+              {projects.length === 0 && <option value="">No projects</option>}
+              {projects.map(p => <option key={p.dir} value={p.dir}>{p.title}</option>)}
+            </select>
+            <button
+              type="button"
+              className="admin__btn"
+              onClick={() => { setShowCreate(v => !v); setEditingProject(false); }}
+            >
+              {showCreate ? "Cancel" : "+ New Project"}
+            </button>
+            {currentProject && !showCreate && (
+              <>
+                <button
+                  type="button"
+                  className="admin__btn"
+                  onClick={() => {
+                    setEditTitle(currentProject.title);
+                    setEditBody(currentProject.body);
+                    setEditingProject(v => !v);
+                  }}
+                >
+                  {editingProject ? "Cancel" : "Edit"}
+                </button>
+                <button
+                  type="button"
+                  className="admin__btn admin__btn--danger"
+                  onClick={handleDeleteProject}
+                  disabled={deletingProject}
+                >
+                  {deletingProject ? "Deleting…" : "Delete Project"}
+                </button>
+              </>
+            )}
+          </div>
         </div>
+
+        {showCreate && (
+          <div className="admin__project-form">
+            <div className="admin__field">
+              <label htmlFor="newTitle">Title</label>
+              <input
+                id="newTitle" type="text" value={newTitle}
+                onChange={e => handleTitleChange(e.target.value)}
+                placeholder="e.g. Golden Hour"
+              />
+            </div>
+            <div className="admin__field">
+              <label htmlFor="newDir">Directory (URL slug)</label>
+              <input
+                id="newDir" type="text" value={newDir}
+                onChange={e => { setNewDir(e.target.value); setDirEdited(true); }}
+                placeholder="e.g. golden-hour"
+              />
+            </div>
+            <div className="admin__field">
+              <label htmlFor="newBody">Description</label>
+              <textarea
+                id="newBody" value={newBody} rows={3}
+                onChange={e => setNewBody(e.target.value)}
+                placeholder="Shown on the project page. Use a blank line to start a new paragraph."
+              />
+            </div>
+            <button
+              type="button" className="admin__btn admin__btn--primary"
+              onClick={handleCreate} disabled={creating}
+            >
+              {creating ? "Creating…" : "Create Project"}
+            </button>
+          </div>
+        )}
+
+        {editingProject && currentProject && (
+          <div className="admin__project-form">
+            <div className="admin__field">
+              <label htmlFor="editTitle">Title</label>
+              <input
+                id="editTitle" type="text" value={editTitle}
+                onChange={e => setEditTitle(e.target.value)}
+              />
+            </div>
+            <div className="admin__field">
+              <label htmlFor="editBody">Description</label>
+              <textarea
+                id="editBody" value={editBody} rows={3}
+                onChange={e => setEditBody(e.target.value)}
+              />
+            </div>
+            <button
+              type="button" className="admin__btn admin__btn--primary"
+              onClick={handleSaveProject} disabled={savingProject}
+            >
+              {savingProject ? "Saving…" : "Save Changes"}
+            </button>
+          </div>
+        )}
 
         <div className="admin__field">
           <label htmlFor="files">Upload Images</label>
           <input
             ref={fileInputRef} id="files" type="file"
             accept="image/jpeg,image/jpg,image/png,image/webp"
-            multiple onChange={handleUpload} disabled={uploading}
+            multiple onChange={handleUpload} disabled={uploading || !category}
           />
         </div>
 
@@ -168,10 +404,23 @@ export default function Admin() {
 
       <div className="admin__gallery">
         <h2>
-          {categoryTitle}
+          {currentProject?.title ?? category}
           {!loadingImages && (
             <span className="admin__count">
               {" "}— {images.length} image{images.length !== 1 ? "s" : ""}
+            </span>
+          )}
+          {orderDirty && (
+            <span className="admin__order-actions">
+              <button
+                type="button" className="admin__btn admin__btn--primary"
+                onClick={handleSaveOrder} disabled={savingOrder}
+              >
+                {savingOrder ? "Saving order…" : "Save Order"}
+              </button>
+              <button type="button" className="admin__btn" onClick={handleResetOrder}>
+                Reset
+              </button>
             </span>
           )}
         </h2>
@@ -184,9 +433,16 @@ export default function Admin() {
 
         {!loadingImages && images.length > 0 && (
           <div className="admin__grid">
-            {images.map(img => (
-              <div key={img.path} className="admin__thumb">
-                <img src={rawUrl(img.path)} alt={img.name} />
+            {images.map((img, i) => (
+              <div
+                key={img.path}
+                className={`admin__thumb${dragIndex === i ? " admin__thumb--dragging" : ""}`}
+                draggable
+                onDragStart={() => handleDragStart(i)}
+                onDragOver={e => handleDragOver(e, i)}
+                onDragEnd={handleDragEnd}
+              >
+                <img src={rawUrl(img.path)} alt={img.name} draggable={false} />
 
                 {renamingPath === img.path ? (
                   <div className="admin__thumb-rename">

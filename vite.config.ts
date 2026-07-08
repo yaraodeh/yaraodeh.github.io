@@ -4,6 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   root: 'src',
+  envDir: path.resolve(__dirname),
   publicDir: path.resolve(__dirname, 'public'),
   plugins: [react()],
   base: '/',
