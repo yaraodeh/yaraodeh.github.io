@@ -1,8 +1,8 @@
 import { fileExt, readBase64, utf8ToBase64, base64ToUtf8 } from "./fileUtils";
 import { portfolioBase } from "../config/site";
 
-export interface GHFile { name: string; path: string; sha: string; }
-export interface ProjectMeta { dir: string; title: string; body: string; }
+export interface ImageMeta { file: string; order: number; tags: string[]; }
+export interface ProjectMeta { dir: string; title: string; body: string; images: ImageMeta[]; }
 
 const GH_OWNER  = import.meta.env.VITE_GH_OWNER   as string;
 const GH_REPO   = import.meta.env.VITE_GH_REPO    as string;
@@ -11,8 +11,8 @@ const GH_BRANCH = import.meta.env.VITE_GH_BRANCH  as string;
 const BASE_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
 const PROJECTS_JSON_PATH = "src/config/projects.json";
 
-export const rawUrl = (path: string) =>
-  `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${path}?t=${Date.now()}`;
+export const rawUrl = (dir: string, file: string) =>
+  `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${portfolioBase}/${dir}/${file}?t=${Date.now()}`;
 
 function headers(token: string): Record<string, string> {
   return {
@@ -80,119 +80,6 @@ async function makeCommit(entries: TreeEntry[], message: string, token: string):
   }
 }
 
-export async function fetchImages(category: string, token: string): Promise<GHFile[]> {
-  const res = await fetch(
-    `${BASE_URL}/contents/${portfolioBase}/${category}?ref=${GH_BRANCH}`,
-    { headers: headers(token) },
-  );
-  if (!res.ok) return [];
-  const data = await res.json() as { name: string; path: string; sha: string; type: string }[];
-  return data
-    .filter(f => f.type === "file" && /\.(jpg|jpeg|png|webp)$/i.test(f.name))
-    .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-}
-
-export async function uploadImages(
-  files: File[],
-  category: string,
-  existingImages: GHFile[],
-  token: string,
-  onProgress: (label: string) => void,
-): Promise<void> {
-  const baseNum = Math.max(0, ...existingImages.map(f => parseInt(f.name) || 0));
-  const named = files.map((file, i) => ({
-    file,
-    path: `${portfolioBase}/${category}/${baseNum + i + 1}-image.${fileExt(file.name)}`,
-  }));
-
-  onProgress(`Reading ${files.length} file${files.length > 1 ? "s" : ""}…`);
-  const base64s = await Promise.all(named.map(e => readBase64(e.file)));
-
-  onProgress("Creating blobs…");
-  const blobShas = await Promise.all(base64s.map(b => createBlob(b, token)));
-
-  onProgress("Committing to GitHub…");
-  await makeCommit(
-    named.map((e, i) => ({ path: e.path, mode: "100644", type: "blob", sha: blobShas[i] })),
-    `upload: add ${files.length} image${files.length > 1 ? "s" : ""} to ${category}`,
-    token,
-  );
-}
-
-export async function deleteImage(img: GHFile, category: string, token: string): Promise<void> {
-  const res = await fetch(`${BASE_URL}/contents/${img.path}`, {
-    method: "DELETE",
-    headers: headers(token),
-    body: JSON.stringify({
-      message: `delete: remove ${img.name} from ${category}`,
-      sha: img.sha,
-      branch: GH_BRANCH,
-    }),
-  });
-  if (!res.ok) throw new Error(`Delete failed (${res.status})`);
-}
-
-export async function renameImage(
-  img: GHFile,
-  newBase: string,
-  category: string,
-  token: string,
-): Promise<GHFile> {
-  const newName = `${newBase.trim()}.${fileExt(img.name)}`;
-  const newPath = `${portfolioBase}/${category}/${newName}`;
-
-  const rawRes = await fetch(rawUrl(img.path));
-  if (!rawRes.ok) throw new Error("Could not download file for rename");
-  const base64 = await readBase64(await rawRes.blob());
-  const blobSha = await createBlob(base64, token);
-
-  await makeCommit(
-    [
-      { path: newPath, mode: "100644", type: "blob", sha: blobSha },
-      { path: img.path, mode: "100644", type: "blob", sha: null },
-    ],
-    `rename: ${img.name} → ${newName} in ${category}`,
-    token,
-  );
-
-  return { name: newName, path: newPath, sha: blobSha };
-}
-
-export async function reorderImages(
-  orderedImages: GHFile[],
-  category: string,
-  token: string,
-): Promise<GHFile[]> {
-  const targets = orderedImages.map((img, i) => ({
-    img,
-    newPath: `${portfolioBase}/${category}/${i + 1}-image.${fileExt(img.name)}`,
-  }));
-
-  const newPaths = new Set(targets.map(t => t.newPath));
-  const entries: TreeEntry[] = [];
-
-  for (const { img, newPath } of targets) {
-    if (img.path !== newPath) {
-      entries.push({ path: newPath, mode: "100644", type: "blob", sha: img.sha });
-    }
-  }
-  for (const { img, newPath } of targets) {
-    if (img.path !== newPath && !newPaths.has(img.path)) {
-      entries.push({ path: img.path, mode: "100644", type: "blob", sha: null });
-    }
-  }
-
-  if (entries.length === 0) return orderedImages;
-
-  await makeCommit(entries, `reorder: images in ${category}`, token);
-
-  return targets.map(({ img, newPath }) => ({
-    name: newPath.split("/").pop()!,
-    path: newPath,
-    sha: img.sha,
-  }));
-}
-
 export async function fetchProjectsMeta(token: string): Promise<ProjectMeta[]> {
   const res = await fetch(
     `${BASE_URL}/contents/${PROJECTS_JSON_PATH}?ref=${GH_BRANCH}`,
@@ -223,14 +110,14 @@ async function commitProjectsMeta(
 }
 
 export async function createProject(
-  project: ProjectMeta,
+  project: { dir: string; title: string; body: string },
   existing: ProjectMeta[],
   token: string,
 ): Promise<ProjectMeta[]> {
   if (existing.some(p => p.dir === project.dir)) {
     throw new Error(`A project with dir "${project.dir}" already exists`);
   }
-  const updated = [...existing, project];
+  const updated = [...existing, { ...project, images: [] }];
   await commitProjectsMeta(updated, `admin: add project "${project.title}"`, token);
   return updated;
 }
@@ -249,13 +136,134 @@ export async function updateProject(
 export async function deleteProject(
   dir: string,
   existing: ProjectMeta[],
-  images: GHFile[],
   token: string,
 ): Promise<ProjectMeta[]> {
+  const project = existing.find(p => p.dir === dir);
   const updated = existing.filter(p => p.dir !== dir);
-  const imageDeletions: TreeEntry[] = images.map(img => ({
-    path: img.path, mode: "100644", type: "blob", sha: null,
+  const imageDeletions: TreeEntry[] = (project?.images ?? []).map(img => ({
+    path: `${portfolioBase}/${dir}/${img.file}`, mode: "100644", type: "blob", sha: null,
   }));
   await commitProjectsMeta(updated, `admin: delete project "${dir}"`, token, imageDeletions);
+  return updated;
+}
+
+function uniqueFileName(originalName: string, taken: Set<string>): string {
+  const ext = fileExt(originalName);
+  let name: string;
+  do {
+    name = `${crypto.randomUUID().slice(0, 8)}.${ext}`;
+  } while (taken.has(name));
+  taken.add(name);
+  return name;
+}
+
+export async function uploadImages(
+  files: File[],
+  dir: string,
+  existing: ProjectMeta[],
+  token: string,
+  onProgress: (label: string) => void,
+): Promise<ProjectMeta[]> {
+  const project = existing.find(p => p.dir === dir);
+  if (!project) throw new Error(`Unknown project "${dir}"`);
+
+  const takenNames = new Set(project.images.map(img => img.file));
+  const baseOrder = Math.max(0, ...project.images.map(img => img.order));
+
+  const named = files.map((file, i) => ({
+    file,
+    name: uniqueFileName(file.name, takenNames),
+    order: baseOrder + i + 1,
+  }));
+
+  onProgress(`Reading ${files.length} file${files.length > 1 ? "s" : ""}…`);
+  const base64s = await Promise.all(named.map(e => readBase64(e.file)));
+
+  onProgress("Creating blobs…");
+  const blobShas = await Promise.all(base64s.map(b => createBlob(b, token)));
+
+  const newImages: ImageMeta[] = named.map((e) => ({ file: e.name, order: e.order, tags: [] }));
+  const updatedProject: ProjectMeta = { ...project, images: [...project.images, ...newImages] };
+  const updated = existing.map(p => (p.dir === dir ? updatedProject : p));
+
+  const imageEntries: TreeEntry[] = named.map((e, i) => ({
+    path: `${portfolioBase}/${dir}/${e.name}`, mode: "100644", type: "blob", sha: blobShas[i],
+  }));
+
+  onProgress("Committing to GitHub…");
+  await commitProjectsMeta(
+    updated,
+    `upload: add ${files.length} image${files.length > 1 ? "s" : ""} to ${dir}`,
+    token,
+    imageEntries,
+  );
+
+  return updated;
+}
+
+export async function deleteImage(
+  dir: string,
+  file: string,
+  existing: ProjectMeta[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  const project = existing.find(p => p.dir === dir);
+  if (!project) throw new Error(`Unknown project "${dir}"`);
+
+  const updatedProject: ProjectMeta = {
+    ...project,
+    images: project.images.filter(img => img.file !== file),
+  };
+  const updated = existing.map(p => (p.dir === dir ? updatedProject : p));
+
+  await commitProjectsMeta(
+    updated,
+    `delete: remove ${file} from ${dir}`,
+    token,
+    [{ path: `${portfolioBase}/${dir}/${file}`, mode: "100644", type: "blob", sha: null }],
+  );
+
+  return updated;
+}
+
+export async function reorderImages(
+  dir: string,
+  orderedFiles: string[],
+  existing: ProjectMeta[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  const project = existing.find(p => p.dir === dir);
+  if (!project) throw new Error(`Unknown project "${dir}"`);
+
+  const byFile = new Map(project.images.map(img => [img.file, img]));
+  const reordered: ImageMeta[] = orderedFiles.map((file, i) => ({
+    ...byFile.get(file)!,
+    order: i + 1,
+  }));
+
+  const updatedProject: ProjectMeta = { ...project, images: reordered };
+  const updated = existing.map(p => (p.dir === dir ? updatedProject : p));
+
+  await commitProjectsMeta(updated, `reorder: images in ${dir}`, token);
+  return updated;
+}
+
+export async function updateImageTags(
+  dir: string,
+  file: string,
+  tags: string[],
+  existing: ProjectMeta[],
+  token: string,
+): Promise<ProjectMeta[]> {
+  const project = existing.find(p => p.dir === dir);
+  if (!project) throw new Error(`Unknown project "${dir}"`);
+
+  const updatedProject: ProjectMeta = {
+    ...project,
+    images: project.images.map(img => (img.file === file ? { ...img, tags } : img)),
+  };
+  const updated = existing.map(p => (p.dir === dir ? updatedProject : p));
+
+  await commitProjectsMeta(updated, `tags: update ${file} in ${dir}`, token);
   return updated;
 }

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
-  fetchImages, uploadImages, deleteImage, renameImage, reorderImages,
+  uploadImages, deleteImage, reorderImages, updateImageTags,
   fetchProjectsMeta, createProject, updateProject, deleteProject, rawUrl,
 } from "@/lib/github";
-import type { GHFile, ProjectMeta } from "@/lib/github";
+import type { ImageMeta, ProjectMeta } from "@/lib/github";
 import "./Admin.css";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string;
@@ -14,6 +14,8 @@ const slugify = (s: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
+const byOrder = (images: ImageMeta[]) => [...images].sort((a, b) => a.order - b.order);
+
 export default function Admin() {
   const [authed,        setAuthed]        = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -23,14 +25,13 @@ export default function Admin() {
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [category,        setCategory]        = useState("");
 
-  const [images,        setImages]        = useState<GHFile[]>([]);
-  const [loadingImages, setLoadingImages] = useState(false);
+  const [orderedImages, setOrderedImages] = useState<ImageMeta[]>([]);
   const [uploading,     setUploading]     = useState(false);
   const [uploadLabel,   setUploadLabel]   = useState("");
   const [errors,        setErrors]        = useState<string[]>([]);
-  const [deletingPath,  setDeletingPath]  = useState<string | null>(null);
-  const [renamingPath,  setRenamingPath]  = useState<string | null>(null);
-  const [renameValue,   setRenameValue]   = useState("");
+  const [busyFile,      setBusyFile]      = useState<string | null>(null);
+  const [editingTagsFile, setEditingTagsFile] = useState<string | null>(null);
+  const [tagsValue,       setTagsValue]       = useState("");
 
   const [dragIndex,   setDragIndex]   = useState<number | null>(null);
   const [orderDirty,  setOrderDirty]  = useState(false);
@@ -68,21 +69,10 @@ export default function Admin() {
 
   const currentProject = projects.find(p => p.dir === category);
 
-  const loadImages = useCallback(async (cat: string) => {
-    setLoadingImages(true);
-    setImages([]);
-    setOrderDirty(false);
-    try {
-      setImages(await fetchImages(cat, GH_TOKEN));
-    } catch {
-      setImages([]);
-    }
-    setLoadingImages(false);
-  }, []);
-
   useEffect(() => {
-    if (authed && category) loadImages(category);
-  }, [authed, category, loadImages]);
+    setOrderedImages(currentProject ? byOrder(currentProject.images) : []);
+    setOrderDirty(false);
+  }, [category, projects]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setEditingProject(false);
@@ -105,8 +95,8 @@ export default function Admin() {
     setUploading(true);
     setErrors([]);
     try {
-      await uploadImages(files, category, images, GH_TOKEN, setUploadLabel);
-      await loadImages(category);
+      const updated = await uploadImages(files, category, projects, GH_TOKEN, setUploadLabel);
+      setProjects(updated);
     } catch (err) {
       setErrors([(err as Error).message]);
     }
@@ -115,37 +105,34 @@ export default function Admin() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleDelete = async (img: GHFile) => {
-    if (!window.confirm(`Delete "${img.name}" permanently?`)) return;
-    setDeletingPath(img.path);
+  const handleDeleteImage = async (file: string) => {
+    if (!window.confirm(`Delete "${file}" permanently?`)) return;
+    setBusyFile(file);
     try {
-      await deleteImage(img, category, GH_TOKEN);
-      setImages(prev => prev.filter(i => i.path !== img.path));
+      const updated = await deleteImage(category, file, projects, GH_TOKEN);
+      setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
     }
-    setDeletingPath(null);
+    setBusyFile(null);
   };
 
-  const handleRename = async (img: GHFile, newBase: string) => {
-    const trimmed = newBase.trim();
-    if (!trimmed || `${trimmed}.${img.name.split(".").pop()}` === img.name) {
-      setRenamingPath(null);
-      return;
-    }
-    setDeletingPath(img.path);
+  const startEditTags = (img: ImageMeta) => {
+    setEditingTagsFile(img.file);
+    setTagsValue(img.tags.join(", "));
+  };
+
+  const handleSaveTags = async (file: string) => {
+    const tags = tagsValue.split(",").map(t => t.trim()).filter(Boolean);
+    setBusyFile(file);
     try {
-      const renamed = await renameImage(img, trimmed, category, GH_TOKEN);
-      setImages(prev =>
-        prev
-          .map(i => i.path === img.path ? renamed : i)
-          .sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-      );
+      const updated = await updateImageTags(category, file, tags, projects, GH_TOKEN);
+      setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
     }
-    setDeletingPath(null);
-    setRenamingPath(null);
+    setBusyFile(null);
+    setEditingTagsFile(null);
   };
 
   const handleDragStart = (i: number) => setDragIndex(i);
@@ -153,7 +140,7 @@ export default function Admin() {
   const handleDragOver = (e: React.DragEvent, i: number) => {
     e.preventDefault();
     if (dragIndex === null || dragIndex === i) return;
-    setImages(prev => {
+    setOrderedImages(prev => {
       const next = [...prev];
       const [moved] = next.splice(dragIndex, 1);
       next.splice(i, 0, moved);
@@ -169,16 +156,18 @@ export default function Admin() {
     setSavingOrder(true);
     setErrors([]);
     try {
-      const updated = await reorderImages(images, category, GH_TOKEN);
-      setImages(updated);
-      setOrderDirty(false);
+      const updated = await reorderImages(category, orderedImages.map(img => img.file), projects, GH_TOKEN);
+      setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
     }
     setSavingOrder(false);
   };
 
-  const handleResetOrder = () => loadImages(category);
+  const handleResetOrder = () => {
+    setOrderedImages(currentProject ? byOrder(currentProject.images) : []);
+    setOrderDirty(false);
+  };
 
   const handleTitleChange = (v: string) => {
     setNewTitle(v);
@@ -228,12 +217,12 @@ export default function Admin() {
   const handleDeleteProject = async () => {
     if (!currentProject) return;
     if (!window.confirm(
-      `Delete project "${currentProject.title}" and all ${images.length} image(s)? This cannot be undone.`
+      `Delete project "${currentProject.title}" and all ${currentProject.images.length} image(s)? This cannot be undone.`
     )) return;
     setErrors([]);
     setDeletingProject(true);
     try {
-      const updated = await deleteProject(category, projects, images, GH_TOKEN);
+      const updated = await deleteProject(category, projects, GH_TOKEN);
       setProjects(updated);
       setCategory(updated[0]?.dir ?? "");
     } catch (err) {
@@ -405,9 +394,9 @@ export default function Admin() {
       <div className="admin__gallery">
         <h2>
           {currentProject?.title ?? category}
-          {!loadingImages && (
+          {currentProject && (
             <span className="admin__count">
-              {" "}— {images.length} image{images.length !== 1 ? "s" : ""}
+              {" "}— {orderedImages.length} image{orderedImages.length !== 1 ? "s" : ""}
             </span>
           )}
           {orderDirty && (
@@ -425,57 +414,58 @@ export default function Admin() {
           )}
         </h2>
 
-        {loadingImages && <p className="admin__status">Loading…</p>}
-
-        {!loadingImages && images.length === 0 && (
+        {currentProject && orderedImages.length === 0 && (
           <p className="admin__status">No images yet for this category.</p>
         )}
 
-        {!loadingImages && images.length > 0 && (
+        {orderedImages.length > 0 && (
           <div className="admin__grid">
-            {images.map((img, i) => (
+            {orderedImages.map((img, i) => (
               <div
-                key={img.path}
+                key={img.file}
                 className={`admin__thumb${dragIndex === i ? " admin__thumb--dragging" : ""}`}
                 draggable
                 onDragStart={() => handleDragStart(i)}
                 onDragOver={e => handleDragOver(e, i)}
                 onDragEnd={handleDragEnd}
               >
-                <img src={rawUrl(img.path)} alt={img.name} draggable={false} />
+                <img src={rawUrl(category, img.file)} alt={img.file} draggable={false} />
 
-                {renamingPath === img.path ? (
+                {editingTagsFile === img.file ? (
                   <div className="admin__thumb-rename">
                     <input
                       type="text"
-                      value={renameValue}
-                      onChange={e => setRenameValue(e.target.value)}
+                      value={tagsValue}
+                      onChange={e => setTagsValue(e.target.value)}
+                      placeholder="tag1, tag2"
                       onKeyDown={e => {
-                        if (e.key === "Enter")  handleRename(img, renameValue);
-                        if (e.key === "Escape") setRenamingPath(null);
+                        if (e.key === "Enter")  handleSaveTags(img.file);
+                        if (e.key === "Escape") setEditingTagsFile(null);
                       }}
                       autoFocus
                     />
-                    <button className="admin__rename-save" onClick={() => handleRename(img, renameValue)}>✓</button>
-                    <button className="admin__rename-cancel" onClick={() => setRenamingPath(null)}>✕</button>
+                    <button className="admin__rename-save" onClick={() => handleSaveTags(img.file)}>✓</button>
+                    <button className="admin__rename-cancel" onClick={() => setEditingTagsFile(null)}>✕</button>
                   </div>
                 ) : (
                   <div className="admin__thumb-info">
-                    <span className="admin__thumb-name">{img.name}</span>
+                    <span className="admin__thumb-name">
+                      {img.tags.length > 0 ? img.tags.join(", ") : "No tags"}
+                    </span>
                     <div className="admin__thumb-actions">
                       <button
                         className="admin__rename-btn"
-                        onClick={() => { setRenamingPath(img.path); setRenameValue(img.name.replace(/\.[^.]+$/, "")); }}
-                        disabled={!!deletingPath}
-                        aria-label="Rename"
-                      >✎</button>
+                        onClick={() => startEditTags(img)}
+                        disabled={!!busyFile}
+                        aria-label="Edit tags"
+                      >🏷</button>
                       <button
                         className="admin__delete-btn"
-                        onClick={() => handleDelete(img)}
-                        disabled={deletingPath === img.path}
+                        onClick={() => handleDeleteImage(img.file)}
+                        disabled={busyFile === img.file}
                         aria-label="Delete"
                       >
-                        {deletingPath === img.path
+                        {busyFile === img.file
                           ? <span className="admin__spinner" />
                           : (
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -2,61 +2,240 @@
   {
     "dir": "portrait",
     "title": "Portrait",
-    "body": "Intimate portrait sessions crafted to reveal character and personality in every frame."
+    "body": "Intimate portrait sessions crafted to reveal character and personality in every frame.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "couples",
     "title": "Couples",
-    "body": "Romantic couples sessions full of authentic emotion and beautifully composed storytelling."
+    "body": "Romantic couples sessions full of authentic emotion and beautifully composed storytelling.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "events",
     "title": "Events",
-    "body": "Vibrant event photography that brings the energy and atmosphere of every occasion to life."
+    "body": "Vibrant event photography that brings the energy and atmosphere of every occasion to life.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "conferences",
     "title": "Conferences",
-    "body": "Polished corporate conference and seminar coverage for press, marketing, and lasting memory."
+    "body": "Polished corporate conference and seminar coverage for press, marketing, and lasting memory.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "jewellery",
     "title": "Jewellery",
-    "body": "Macro jewellery photography with precise lighting that showcases every detail and sparkle."
+    "body": "Macro jewellery photography with precise lighting that showcases every detail and sparkle.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "landscape",
     "title": "Landscape",
-    "body": "Sweeping natural landscapes and travel photography available as fine art prints."
+    "body": "Sweeping natural landscapes and travel photography available as fine art prints.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "nature",
     "title": "Nature",
-    "body": "Close-up and wide-angle nature photography celebrating the quiet beauty of the natural world."
+    "body": "Close-up and wide-angle nature photography celebrating the quiet beauty of the natural world.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "modern-architecture",
     "title": "Modern Architecture",
-    "body": "Clean lines, striking geometry, and the bold language of contemporary architecture."
+    "body": "Clean lines, striking geometry, and the bold language of contemporary architecture.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "historic-architecture",
     "title": "Historic Architecture",
-    "body": "Detailed architectural photography of historic buildings, monuments, and cultural heritage sites."
+    "body": "Detailed architectural photography of historic buildings, monuments, and cultural heritage sites.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "art",
     "title": "Art",
-    "body": "Fine art and conceptual photography that blurs the line between image-making and visual art."
+    "body": "Fine art and conceptual photography that blurs the line between image-making and visual art.",
+    "images": [
+      {
+        "file": "1-image.jpg",
+        "order": 1,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "this-sea-is-mine",
     "title": "This Sea Is Mine 🌊",
-    "body": "A project born from a simple question: what does it mean to be separated from a sea that should already be yours?\n\nThrough landscapes, absence, and memory, this work reflects on borders, belonging, and the right to look toward one's own coast.\n\nGrateful to share this exhibition as the final project of my Master in Photography and Design at ELISAVA.\n\nThank you to everyone who joined me and supported this journey."
+    "body": "A project born from a simple question: what does it mean to be separated from a sea that should already be yours?\n\nThrough landscapes, absence, and memory, this work reflects on borders, belonging, and the right to look toward one's own coast.\n\nGrateful to share this exhibition as the final project of my Master in Photography and Design at ELISAVA.\n\nThank you to everyone who joined me and supported this journey.",
+    "images": [
+      {
+        "file": "1-image.jpeg",
+        "order": 1,
+        "tags": []
+      },
+      {
+        "file": "2-image.jpeg",
+        "order": 2,
+        "tags": []
+      },
+      {
+        "file": "3-image.jpeg",
+        "order": 3,
+        "tags": []
+      },
+      {
+        "file": "4-image.jpeg",
+        "order": 4,
+        "tags": []
+      },
+      {
+        "file": "5-image.jpeg",
+        "order": 5,
+        "tags": []
+      },
+      {
+        "file": "6-image.jpeg",
+        "order": 6,
+        "tags": []
+      },
+      {
+        "file": "7-image.jpeg",
+        "order": 7,
+        "tags": []
+      },
+      {
+        "file": "8-image.jpeg",
+        "order": 8,
+        "tags": []
+      }
+    ]
   },
   {
     "dir": "presence",
     "title": "Presence",
-    "body": "A visual exploration of presence — the quiet, felt weight of being somewhere, with someone, in a moment worth holding onto."
+    "body": "A visual exploration of presence — the quiet, felt weight of being somewhere, with someone, in a moment worth holding onto.",
+    "images": [
+      {
+        "file": "1-image.jpeg",
+        "order": 1,
+        "tags": []
+      },
+      {
+        "file": "2-image.jpeg",
+        "order": 2,
+        "tags": []
+      },
+      {
+        "file": "3-image.jpeg",
+        "order": 3,
+        "tags": []
+      },
+      {
+        "file": "4-image.jpeg",
+        "order": 4,
+        "tags": []
+      },
+      {
+        "file": "5-image.jpeg",
+        "order": 5,
+        "tags": []
+      },
+      {
+        "file": "6-image.jpeg",
+        "order": 6,
+        "tags": []
+      },
+      {
+        "file": "7-image.jpeg",
+        "order": 7,
+        "tags": []
+      },
+      {
+        "file": "8-image.jpeg",
+        "order": 8,
+        "tags": []
+      },
+      {
+        "file": "9-image.jpeg",
+        "order": 9,
+        "tags": []
+      },
+      {
+        "file": "10-image.jpeg",
+        "order": 10,
+        "tags": []
+      },
+      {
+        "file": "11-image.jpeg",
+        "order": 11,
+        "tags": []
+      },
+      {
+        "file": "12-image.jpeg",
+        "order": 12,
+        "tags": []
+      },
+      {
+        "file": "13-image.jpeg",
+        "order": 13,
+        "tags": []
+      }
+    ]
   }
 ]
