@@ -34,6 +34,9 @@ jobs:
           VITE_GH_OWNER: ${{ secrets.VITE_GH_OWNER }}
           VITE_GH_REPO: ${{ secrets.VITE_GH_REPO }}
           VITE_GH_BRANCH: ${{ secrets.VITE_GH_BRANCH }}
+          VITE_GH_TOKEN: ${{ secrets.VITE_GH_TOKEN }}
+          VITE_CLOUDINARY_CLOUD_NAME: bmtiifge
+          VITE_CLOUDINARY_UPLOAD_PRESET: ml_default
 
       - name: Deploy to main
         run: |

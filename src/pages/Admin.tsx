@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
-  uploadImages, deleteImage, reorderImages, updateImageTags,
-  fetchProjectsMeta, createProject, updateProject, deleteProject, rawUrl,
+  addImages, deleteImage, reorderImages, updateImageTags, imgKey,
+  fetchProjectsMeta, createProject, updateProject, deleteProject,
 } from "@/lib/github";
 import type { ImageMeta, ProjectMeta } from "@/lib/github";
+import { uploadToCloudinary } from "@/lib/cloudinary";
 import "./Admin.css";
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD as string;
@@ -29,8 +30,8 @@ export default function Admin() {
   const [uploading,     setUploading]     = useState(false);
   const [uploadLabel,   setUploadLabel]   = useState("");
   const [errors,        setErrors]        = useState<string[]>([]);
-  const [busyFile,      setBusyFile]      = useState<string | null>(null);
-  const [editingTagsFile, setEditingTagsFile] = useState<string | null>(null);
+  const [busyKey,       setBusyKey]       = useState<string | null>(null);
+  const [editingTagsKey, setEditingTagsKey] = useState<string | null>(null);
   const [tagsValue,       setTagsValue]       = useState("");
 
   const [dragIndex,   setDragIndex]   = useState<number | null>(null);
@@ -56,7 +57,7 @@ export default function Admin() {
     setLoadingProjects(true);
     setErrors([]);
     try {
-      const list = await fetchProjectsMeta(GH_TOKEN);
+      const list = await fetchProjectsMeta();
       setProjects(list);
       setCategory(prev => (prev && list.some(p => p.dir === prev)) ? prev : (list[0]?.dir ?? ""));
     } catch (err) {
@@ -95,7 +96,10 @@ export default function Admin() {
     setUploading(true);
     setErrors([]);
     try {
-      const updated = await uploadImages(files, category, projects, GH_TOKEN, setUploadLabel);
+      setUploadLabel(`Uploading ${files.length} image${files.length > 1 ? "s" : ""}…`);
+      const uploaded = await Promise.all(files.map(uploadToCloudinary));
+      setUploadLabel("Saving to project…");
+      const updated = await addImages(category, uploaded, projects, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors([(err as Error).message]);
@@ -105,34 +109,34 @@ export default function Admin() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleDeleteImage = async (file: string) => {
-    if (!window.confirm(`Delete "${file}" permanently?`)) return;
-    setBusyFile(file);
+  const handleDeleteImage = async (key: string) => {
+    if (!window.confirm(`Delete this image permanently?`)) return;
+    setBusyKey(key);
     try {
-      const updated = await deleteImage(category, file, projects, GH_TOKEN);
+      const updated = await deleteImage(category, key, projects, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
     }
-    setBusyFile(null);
+    setBusyKey(null);
   };
 
   const startEditTags = (img: ImageMeta) => {
-    setEditingTagsFile(img.file);
+    setEditingTagsKey(imgKey(img));
     setTagsValue(img.tags.join(", "));
   };
 
-  const handleSaveTags = async (file: string) => {
+  const handleSaveTags = async (key: string) => {
     const tags = tagsValue.split(",").map(t => t.trim()).filter(Boolean);
-    setBusyFile(file);
+    setBusyKey(key);
     try {
-      const updated = await updateImageTags(category, file, tags, projects, GH_TOKEN);
+      const updated = await updateImageTags(category, key, tags, projects, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
     }
-    setBusyFile(null);
-    setEditingTagsFile(null);
+    setBusyKey(null);
+    setEditingTagsKey(null);
   };
 
   const handleDragStart = (i: number) => setDragIndex(i);
@@ -156,7 +160,7 @@ export default function Admin() {
     setSavingOrder(true);
     setErrors([]);
     try {
-      const updated = await reorderImages(category, orderedImages.map(img => img.file), projects, GH_TOKEN);
+      const updated = await reorderImages(category, orderedImages.map(imgKey), projects, GH_TOKEN);
       setProjects(updated);
     } catch (err) {
       setErrors(prev => [...prev, (err as Error).message]);
@@ -432,68 +436,71 @@ export default function Admin() {
 
         {orderedImages.length > 0 && (
           <div className="admin__grid">
-            {orderedImages.map((img, i) => (
-              <div
-                key={img.file}
-                className={`admin__thumb${dragIndex === i ? " admin__thumb--dragging" : ""}`}
-                draggable
-                onDragStart={() => handleDragStart(i)}
-                onDragOver={e => handleDragOver(e, i)}
-                onDragEnd={handleDragEnd}
-              >
-                <img src={rawUrl(category, img.file)} alt={img.file} draggable={false} />
+            {orderedImages.map((img, i) => {
+              const key = imgKey(img);
+              return (
+                <div
+                  key={key}
+                  className={`admin__thumb${dragIndex === i ? " admin__thumb--dragging" : ""}`}
+                  draggable
+                  onDragStart={() => handleDragStart(i)}
+                  onDragOver={e => handleDragOver(e, i)}
+                  onDragEnd={handleDragEnd}
+                >
+                  <img src={img.url} alt={key} draggable={false} />
 
-                {editingTagsFile === img.file ? (
-                  <div className="admin__thumb-rename">
-                    <input
-                      type="text"
-                      value={tagsValue}
-                      onChange={e => setTagsValue(e.target.value)}
-                      placeholder="tag1, tag2"
-                      onKeyDown={e => {
-                        if (e.key === "Enter")  handleSaveTags(img.file);
-                        if (e.key === "Escape") setEditingTagsFile(null);
-                      }}
-                      autoFocus
-                    />
-                    <button className="admin__rename-save" onClick={() => handleSaveTags(img.file)}>✓</button>
-                    <button className="admin__rename-cancel" onClick={() => setEditingTagsFile(null)}>✕</button>
-                  </div>
-                ) : (
-                  <div className="admin__thumb-info">
-                    <span className="admin__thumb-name">
-                      {img.tags.length > 0 ? img.tags.join(", ") : "No tags"}
-                    </span>
-                    <div className="admin__thumb-actions">
-                      <button
-                        className="admin__rename-btn"
-                        onClick={() => startEditTags(img)}
-                        disabled={!!busyFile}
-                        aria-label="Edit tags"
-                      >🏷</button>
-                      <button
-                        className="admin__delete-btn"
-                        onClick={() => handleDeleteImage(img.file)}
-                        disabled={busyFile === img.file}
-                        aria-label="Delete"
-                      >
-                        {busyFile === img.file
-                          ? <span className="admin__spinner" />
-                          : (
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6M14 11v6" />
-                              <path d="M9 6V4h6v2" />
-                            </svg>
-                          )
-                        }
-                      </button>
+                  {editingTagsKey === key ? (
+                    <div className="admin__thumb-rename">
+                      <input
+                        type="text"
+                        value={tagsValue}
+                        onChange={e => setTagsValue(e.target.value)}
+                        placeholder="tag1, tag2"
+                        onKeyDown={e => {
+                          if (e.key === "Enter")  handleSaveTags(key);
+                          if (e.key === "Escape") setEditingTagsKey(null);
+                        }}
+                        autoFocus
+                      />
+                      <button className="admin__rename-save" onClick={() => handleSaveTags(key)}>✓</button>
+                      <button className="admin__rename-cancel" onClick={() => setEditingTagsKey(null)}>✕</button>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  ) : (
+                    <div className="admin__thumb-info">
+                      <span className="admin__thumb-name">
+                        {img.tags.length > 0 ? img.tags.join(", ") : "No tags"}
+                      </span>
+                      <div className="admin__thumb-actions">
+                        <button
+                          className="admin__rename-btn"
+                          onClick={() => startEditTags(img)}
+                          disabled={!!busyKey}
+                          aria-label="Edit tags"
+                        >🏷</button>
+                        <button
+                          className="admin__delete-btn"
+                          onClick={() => handleDeleteImage(key)}
+                          disabled={busyKey === key}
+                          aria-label="Delete"
+                        >
+                          {busyKey === key
+                            ? <span className="admin__spinner" />
+                            : (
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6l-1 14H6L5 6" />
+                                <path d="M10 11v6M14 11v6" />
+                                <path d="M9 6V4h6v2" />
+                              </svg>
+                            )
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

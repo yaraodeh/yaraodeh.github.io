@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import coverImage from "@/assets/cover/1-image.jpg";
 import { hero } from "@/config/site";
 import "@/components/HeroSection/HeroSection.css";
+
+const coverImage = "https://res.cloudinary.com/bmtiifge/image/upload/v1783519174/yaraodeh-portfolio/cover/1-image_tcdffg.jpg";
 
 export default function HeroSection() {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
-import aboutImage from "@/assets/about/1-image.jpg";
 import { about, hero } from "@/config/site";
 import "@/components/AboutSection/AboutSection.css";
+
+const aboutImage = "https://res.cloudinary.com/bmtiifge/image/upload/v1783519175/yaraodeh-portfolio/about/1-image_sfiklv.jpg";
 
 export default function AboutSection() {
   const bodyHTML = about.body
