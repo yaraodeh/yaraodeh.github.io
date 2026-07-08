@@ -87,6 +87,12 @@
         "tags": [],
         "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783518955/yaraodeh-portfolio/nature/1-image_tadcwr.jpg",
         "publicId": "yaraodeh-portfolio/nature/1-image_tadcwr"
+      },
+      {
+        "url": "https://res.cloudinary.com/bmtiifge/image/upload/v1783549594/WhatsApp_Image_2026-07-06_at_14.09.04_zotjrk.jpg",
+        "publicId": "WhatsApp_Image_2026-07-06_at_14.09.04_zotjrk",
+        "order": 2,
+        "tags": []
       }
     ]
   },
