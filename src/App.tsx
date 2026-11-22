@@ -4,6 +4,8 @@ import Project from "@/pages/Project";
 import CV from "@/pages/CV";
 import Volunteering from "@/pages/Volunteering";
 import Admin from "@/pages/Admin";
+import Booking from "@/components/Booking/Booking";
+
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
         <Route path="/project/:dir" element={<Project />} />
         <Route path="/cv" element={<CV />} />
         <Route path="/volunteering" element={<Volunteering />} />
+        <Route path="/booking" element={<Booking />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </HashRouter>

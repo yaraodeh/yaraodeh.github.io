@@ -21,6 +21,9 @@ export default function Header() {
       navigate("/cv");
     } else if (section === "volunteering") {
       navigate("/volunteering");
+    } else if (section === "booking") {
+      navigate("/booking");
+      window.scrollTo({ top: 0 });
     } else if (isHome) {
       document.getElementById(section)?.scrollIntoView({ behavior: "smooth" });
     } else {
@@ -36,6 +39,7 @@ export default function Header() {
     { id: "cv", label: "CV" },
     { id: "volunteering", label: "Volunteering" },
     { id: "contact", label: "Contact" },
+    { id: "booking", label: "Booking" },
   ];
 
   return (
