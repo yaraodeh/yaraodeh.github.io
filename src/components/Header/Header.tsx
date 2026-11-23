@@ -7,6 +7,7 @@ export default function Header() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [documentsMenuOpen, setDocumentsMenuOpen] = useState(false);
   const isHome = location.pathname === "/";
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function Header() {
 
   const handleNavClick = (section: string) => {
     setMenuOpen(false);
+    setDocumentsMenuOpen(false);
     if (section === "cv") {
       navigate("/cv");
     } else if (section === "volunteering") {
@@ -36,8 +38,7 @@ export default function Header() {
     { id: "portfolio", label: "Portfolio" },
     { id: "about", label: "About" },
     { id: "services", label: "Services" },
-    { id: "cv", label: "CV" },
-    { id: "volunteering", label: "Volunteering" },
+    { id: "documents", label: "CV & Volunteering" },
     { id: "contact", label: "Contact" },
     { id: "booking", label: "Booking" },
   ];
@@ -61,16 +62,56 @@ export default function Header() {
 
         <ul className={`nav-menu${menuOpen ? " active" : ""}`}>
           {navItems.map(({ id, label }) => (
-            <li key={id}>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(id);
-                }}
-              >
-                {label}
-              </a>
+            <li key={id} className={id === "documents" ? "nav-dropdown" : undefined}>
+              {id === "documents" ? (
+                <>
+                  <button
+                    type="button"
+                    className="nav-dropdown-toggle"
+                    aria-expanded={documentsMenuOpen}
+                    aria-haspopup="true"
+                    onClick={() => setDocumentsMenuOpen((open) => !open)}
+                  >
+                    {label} <span className="nav-chevron" aria-hidden="true" />
+                  </button>
+                  {documentsMenuOpen && (
+                    <ul className="nav-submenu">
+                      <li>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavClick("cv");
+                          }}
+                        >
+                          CV
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavClick("volunteering");
+                          }}
+                        >
+                          Volunteering
+                        </a>
+                      </li>
+                    </ul>
+                  )}
+                </>
+              ) : (
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick(id);
+                  }}
+                >
+                  {label}
+                </a>
+              )}
             </li>
           ))}
         </ul>

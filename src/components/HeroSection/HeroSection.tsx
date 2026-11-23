@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { hero } from "@/config/site";
 import "@/components/HeroSection/HeroSection.css";
 
-const coverImage = "https://res.cloudinary.com/bmtiifge/image/upload/v1783519174/yaraodeh-portfolio/cover/1-image_tcdffg.jpg";
+const coverImage =
+  "https://res.cloudinary.com/bmtiifge/image/upload/v1783519174/yaraodeh-portfolio/cover/1-image_tcdffg.jpg";
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -33,11 +34,8 @@ export default function HeroSection() {
           <button className="cta-button" onClick={() => scrollTo("portfolio")}>
             View My Work
           </button>
-          <button className="cta-button" onClick={() => navigate("/cv")}>
-            CV
-          </button>
-          <button className="cta-button" onClick={() => navigate("/volunteering")}>
-            Volunteering
+          <button className="cta-button" onClick={() => navigate("/booking")}>
+            Book a Session
           </button>
         </div>
       </div>
