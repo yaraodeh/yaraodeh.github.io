@@ -1,0 +1,94 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bookings/{bookingId} {
+      function validBooking() {
+        let data = request.resource.data;
+        return data.keys().hasAll([
+            'id',
+            'package',
+            'date',
+            'time',
+            'timezone',
+            'duration',
+            'includedEdits',
+            'requestedEdits',
+            'priceIls',
+            'name',
+            'email',
+            'phone',
+            'paymentMethod',
+            'customNotes',
+            'createdAt',
+            'status'
+          ])
+          && data.keys().hasOnly([
+            'id',
+            'package',
+            'date',
+            'time',
+            'timezone',
+            'duration',
+            'includedEdits',
+            'requestedEdits',
+            'priceIls',
+            'name',
+            'email',
+            'phone',
+            'paymentMethod',
+            'customNotes',
+            'createdAt',
+            'status'
+          ])
+          && data.id is string
+          && data.id == bookingId
+          && data.id.matches('^YO-[0-9]{8}$')
+          && (
+            (data.package == 'Individual portraits' && data.duration == '45 min' && data.includedEdits == 15)
+            || (data.package == 'Couples' && data.duration == '60 min' && data.includedEdits == 10)
+            || (data.package == 'Families' && data.duration == '60 min' && data.includedEdits == 0)
+            || (data.package == 'Graduation' && data.duration == '30 min' && data.includedEdits == 0)
+          )
+          && data.date is string
+          && data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && data.time in [
+            '9:00 AM',
+            '10:00 AM',
+            '11:00 AM',
+            '12:00 PM',
+            '1:00 PM',
+            '2:00 PM',
+            '3:00 PM',
+            '4:00 PM',
+            '5:00 PM',
+            '6:00 PM',
+            '7:00 PM'
+          ]
+          && data.timezone == 'Palestine time'
+          && data.includedEdits is int
+          && data.requestedEdits is int
+          && data.requestedEdits >= 0
+          && data.requestedEdits <= 100
+          && data.priceIls is int
+          && data.priceIls >= 150
+          && data.priceIls <= 1300
+          && data.name is string
+          && data.name.size() > 0
+          && data.name.size() <= 120
+          && data.email is string
+          && data.email.size() <= 254
+          && data.email.matches('^[^@]+@[^@]+[.][^@]+$')
+          && data.phone is string
+          && data.phone.size() <= 40
+          && data.paymentMethod in ['Decide later', 'Cash', 'Visa']
+          && data.customNotes is string
+          && data.customNotes.size() <= 2000
+          && data.createdAt == request.time
+          && data.status == 'Awaiting photographer confirmation';
+      }
+
+      allow create: if validBooking();
+      allow read, update, delete: if false;
+    }
+  }
+}

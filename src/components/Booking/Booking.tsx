@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import emailjs from "@emailjs/browser";
 import { db } from "@/lib/firebase";
 import Header from "@/components/Header/Header";
@@ -148,7 +148,7 @@ export default function Booking() {
       phone,
       paymentMethod,
       customNotes,
-      createdAt: new Date().toISOString(),
+      createdAt: serverTimestamp(),
       status: "Awaiting photographer confirmation",
     };
 
@@ -260,15 +260,15 @@ export default function Booking() {
                 <div className="booking-form-grid">
                   <div className="booking-field">
                     <label htmlFor="booking-name">Your name</label>
-                    <input id="booking-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Full name" required />
+                    <input id="booking-name" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} placeholder="Full name" required />
                   </div>
                   <div className="booking-field">
                     <label htmlFor="booking-email">Email address</label>
-                    <input id="booking-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
+                    <input id="booking-email" type="email" value={email} maxLength={254} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
                   </div>
                   <div className="booking-field">
                     <label htmlFor="booking-phone">Phone <span>(optional)</span></label>
-                    <input id="booking-phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+970..." />
+                    <input id="booking-phone" type="tel" value={phone} maxLength={40} onChange={(e) => setPhone(e.target.value)} placeholder="+970..." />
                   </div>
                   <div className="booking-field">
                     <label htmlFor="booking-edits">Requested edited photos</label>
@@ -293,7 +293,7 @@ export default function Booking() {
                     <span>{showCustomize ? "−" : "+"}</span> Customize your session
                   </button>
                   {showCustomize && (
-                    <textarea rows={4} value={customNotes} onChange={(e) => setCustomNotes(e.target.value)} placeholder="Tell Yara about location ideas, outfit changes, or special requests..." />
+                    <textarea rows={4} value={customNotes} maxLength={2000} onChange={(e) => setCustomNotes(e.target.value)} placeholder="Tell Yara about location ideas, outfit changes, or special requests..." />
                   )}
                 </div>
 
