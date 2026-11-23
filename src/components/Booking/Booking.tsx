@@ -65,6 +65,9 @@ const TIME_SLOTS = [
   "7:00 PM",
 ];
 
+const PAYMENT_METHOD = "Cash";
+const CUSTOMER_BOOKING_TEMPLATE_ID = "template_tf3qxwd";
+
 type Step = "session" | "details" | "review" | "confirmed";
 
 function getLocalDate(date: Date) {
@@ -92,8 +95,8 @@ export default function Booking() {
   const [requestedEdits, setRequestedEdits] = useState(15);
   const [customNotes, setCustomNotes] = useState("");
   const [showCustomize, setShowCustomize] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Decide later");
   const [error, setError] = useState("");
+  const [confirmationNotice, setConfirmationNotice] = useState("");
   const [bookingId, setBookingId] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -128,6 +131,7 @@ export default function Booking() {
   const confirmBooking = async () => {
     setSubmitting(true);
     setError("");
+    setConfirmationNotice("");
     const id = `YO-${Date.now().toString().slice(-8)}`;
     setBookingId(id);
 
@@ -146,18 +150,24 @@ export default function Booking() {
       name,
       email: email.trim().toLowerCase(),
       phone,
-      paymentMethod,
+      paymentMethod: PAYMENT_METHOD,
       customNotes,
       createdAt: serverTimestamp(),
       status: "Awaiting photographer confirmation",
     };
 
     try {
-      // 1. Save booking request securely to Firebase Firestore
       await setDoc(doc(db, "bookings", id), request);
-      console.log("Saved to Firestore successfully!");
+    } catch (err) {
+      console.error("Booking save error:", err);
+      const message = err instanceof Error ? err.message : "Please try again.";
+      setError(`Could not save your booking request. ${message}`);
+      setSubmitting(false);
+      return;
+    }
 
-      // 2. Send instant EmailJS notification to Yara using the new service ID
+    let photographerNotified = false;
+    try {
       await emailjs.send(
         "service_qchijsr",
         "template_new_booking",
@@ -171,23 +181,59 @@ export default function Booking() {
           session_time: time,
           edited_photos: String(requestedEdits),
           total_price: `₪${totalPrice}`,
-          payment_method: paymentMethod,
+          payment_method: PAYMENT_METHOD,
           custom_notes: customNotes || "None",
           manage_link: manageUrl,
           to_email: "yaraodehph@gmail.com",
         },
         "UDhu9CPX98aFgE27g"
       );
-      console.log("Email sent successfully via EmailJS!");
-
-      setStep("confirmed");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err: any) {
-      console.error("Booking submission error:", err);
-      setError(`Error: ${err.text || err.message || "Something went wrong. Check browser console."}`);
-    } finally {
-      setSubmitting(false);
+      photographerNotified = true;
+    } catch (err) {
+      console.error("Photographer notification email failed:", err);
     }
+
+    let customerConfirmationSent = false;
+    if (CUSTOMER_BOOKING_TEMPLATE_ID) {
+      try {
+        await emailjs.send(
+          "service_qchijsr",
+          CUSTOMER_BOOKING_TEMPLATE_ID,
+          {
+            to_email: request.email,
+            client_name: name.trim(),
+            booking_id: id,
+            session_type: selectedPkg.title,
+            session_date: date,
+            session_time: time,
+            session_duration: selectedPkg.duration,
+            edited_photos: String(requestedEdits),
+            total_price: `₪${totalPrice}`,
+            payment_method: PAYMENT_METHOD,
+            custom_notes: customNotes.trim() || "None",
+          },
+          "UDhu9CPX98aFgE27g"
+        );
+        customerConfirmationSent = true;
+      } catch (err) {
+        console.error("Customer confirmation email failed:", err);
+      }
+    }
+
+    const emailStatus = [
+      photographerNotified
+        ? "Yara was notified."
+        : "Yara's notification email could not be sent.",
+      CUSTOMER_BOOKING_TEMPLATE_ID
+        ? customerConfirmationSent
+          ? `A confirmation email was sent to ${request.email}.`
+          : `Your confirmation email could not be sent to ${request.email}.`
+        : "Automatic customer confirmation emails are not configured yet.",
+    ];
+    setConfirmationNotice(`Your booking request was saved. ${emailStatus.join(" ")}`);
+    setStep("confirmed");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSubmitting(false);
   };
 
   return (
@@ -334,13 +380,13 @@ export default function Booking() {
                 </div>
 
                 <aside className="booking-payment">
-                  <label htmlFor="payment-method">Preferred payment method</label>
-                  <select id="payment-method" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                    <option>Decide later</option>
-                    <option>Cash</option>
-                    <option>Visa</option>
-                  </select>
-                  <p>This is a booking request, not an immediate confirmation. Yara will confirm availability and final pricing with you directly.</p>
+                  <p>
+                    <strong>Cash only.</strong> Payment is due on the spot after your session.
+                  </p>
+                  <p className="booking-payment-followup">
+                    This is a booking request, not an immediate confirmation. Yara will confirm
+                    availability and final pricing with you directly.
+                  </p>
                   {error && <p className="booking-error" role="alert">{error}</p>}
                   <button type="button" className="booking-primary" onClick={confirmBooking} disabled={submitting}>
                     {submitting ? "Sending request..." : "Send booking request"} <span>→</span>
@@ -353,11 +399,14 @@ export default function Booking() {
           {step === "confirmed" && (
             <section className="booking-panel booking-confirmed fade-in">
               <div className="confirmed-icon">✓</div>
-              <p className="panel-kicker">Request sent successfully</p>
+              <p className="panel-kicker">Request received</p>
               <h2>You're all set!</h2>
               <p>
-                Reference <strong>{bookingId}</strong>. Your session request has been saved and sent to Yara.
-                She will review your date and time and follow up with confirmation shortly.
+                Reference <strong>{bookingId}</strong>. Your request has been saved, but this is not
+                yet a confirmed appointment. Check the email status below.
+              </p>
+              <p className="booking-email-notice" role="status">
+                {confirmationNotice}
               </p>
               <div className="confirmed-actions">
                 <button type="button" className="booking-primary" onClick={() => navigate("/")}>Return to portfolio</button>

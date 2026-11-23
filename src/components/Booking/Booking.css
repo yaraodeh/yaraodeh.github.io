@@ -187,8 +187,7 @@
   gap: 8px;
 }
 
-.booking-field label,
-.booking-payment label {
+.booking-field label {
   color: #d4d4d4;
   font-size: 14px;
   font-weight: 600;
@@ -201,7 +200,6 @@
 
 .booking-field input,
 .booking-field select,
-.booking-payment select,
 .booking-customize textarea {
   width: 100%;
   min-height: 52px;
@@ -217,7 +215,6 @@
 
 .booking-field input:focus,
 .booking-field select:focus,
-.booking-payment select:focus,
 .booking-customize textarea:focus {
   border-color: rgba(255, 255, 255, 0.55);
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.04);
@@ -352,14 +349,14 @@
   gap: 12px;
 }
 
-.booking-payment select {
-  margin-bottom: 8px;
-}
-
 .booking-payment p {
   color: var(--text-gray);
   font-size: 13px;
   line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.booking-payment .booking-payment-followup {
   margin-bottom: auto;
 }
 
